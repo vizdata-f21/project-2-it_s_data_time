@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Description of Goals and Motivations
 
+## Research Goal 
 
 ## Dataset
 
