@@ -1,0 +1,19 @@
+---
+title: "Proposal"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# High Level Goal
+
+
+# Description of Goals and Motivations
+
+
+## Dataset
+
+
+# Weakly Plan of Attack
