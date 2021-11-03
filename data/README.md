@@ -2,7 +2,7 @@
 
 ## Provenance
 
-This data comes from [Kaggle](https://www.kaggle.com/stefanoleone992/imdb-extensive-dataset?select=IMDb+movies.csv). The motivation for curating this dataset was to investigate the aspects that make a movie successful. The dataset contains data on movies with more than 100 votes scraped from the IMDb website as of 01/01/2020. The  dataset has 85855 observations and 22 variables. 
+This data comes from [Kaggle](https://www.kaggle.com/stefanoleone992/imdb-extensive-dataset?select=IMDb+movies.csv). The motivation for curating this dataset was to investigate the aspects that make a movie successful. The dataset contains data on movies with more than 100 votes scraped from the IMDb website till 01/01/2020. The  dataset has `85855` observations and `22` variables. 
 
 ## IMDb movies.csv
 
