@@ -49,9 +49,13 @@ This data comes from [Kaggle](https://www.kaggle.com/stefanoleone992/imdb-extens
 |imdb_title_id| Title ID on IMDb|
 |weighted_average_vote| total weighted average rating|
 |total_votes| total votes received|
-|weighted_average_vote| |
-|weighted_average_vote| |
-|weighted_average_vote| |
+|mean_vote| total mean vote|
+|median_vote| total median vote|
+|votes_10| number of votes with rating equal to 10|
+|votes_9| number of votes with rating equal to 9|
+|votes_8| number of votes with rating equal to 8|
+|votes_7| number of votes with rating equal to 7|
+|votes_6| number of votes with rating equal to 6|
 
 
 ### Sources
