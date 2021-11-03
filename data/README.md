@@ -31,6 +31,28 @@ This data comes from [Kaggle](https://www.kaggle.com/stefanoleone992/imdb-extens
 |reviews_from_users| number of reviews from users|
 |reviews_from_critics| number of reviews from critics |
 
+## IMDb title_principals.csv
+
+|variable         |description |
+|:----------------|:-----------|
+|imdb_title_id| Title ID on IMDb|
+|ordering| order of importance in the movie|
+|imdb_name_id| cast member name ID on IMDb|
+|category| category of job done by the cast member|
+|job| specific job done by the cast member|
+|characters| name of the character played|
+
+## IMDbratings.csv
+
+|variable         |description |
+|:----------------|:-----------|
+|imdb_title_id| Title ID on IMDb|
+|weighted_average_vote| total weighted average rating|
+|total_votes| total votes received|
+|weighted_average_vote| |
+|weighted_average_vote| |
+|weighted_average_vote| |
+
 
 ### Sources
 
