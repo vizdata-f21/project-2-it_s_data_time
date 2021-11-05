@@ -1,6 +1,7 @@
 ---
 title: "Proposal"
-output: html_document
+author: "it_s_data_time: Raffay Rana, Krystal Hu, Davis Jones, Martha Aboagye"
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
