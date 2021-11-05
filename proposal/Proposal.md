@@ -1,14 +1,14 @@
 Proposal
 ================
-it\_s\_data\_time: Raffay Rana, Krystal Hu, Davis Jones, Martha Aboagye
+It’s Data Time: Raffay Rana, Krystal Hu, Davis Jones, Martha Aboagye
 
-# High Level Goal
+## High Level Goal
 
 Our high level goal is to build a dashboard that allows users to
 interact with movie data from an IMDb dataset of movies and cast
 members.
 
-# Description of Goals and Motivations
+## Description of Goals and Motivations
 
 We would like to create a tool for users to easily explore movie data.
 There are many movies out there, and we figured that building a
@@ -46,7 +46,7 @@ votes scraped from the IMDb website uptill 01/01/2020. The dataset has
 variable and the `IMDBratings` has `85855` observations and `49`
 variables.
 
-# Weakly Plan of Attack
+## Weakly Plan of Attack
 
 | Week   | Activity description                       | Breakdown of tasks                                                                                                                                                                                                                 |
 |:-------|:-------------------------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|

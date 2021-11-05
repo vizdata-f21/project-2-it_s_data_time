@@ -1,6 +1,6 @@
 ---
 title: "Proposal"
-author: "it_s_data_time: Raffay Rana, Krystal Hu, Davis Jones, Martha Aboagye"
+author: "It's Data Time: Raffay Rana, Krystal Hu, Davis Jones, Martha Aboagye"
 output: github_document
 ---
 
@@ -8,11 +8,11 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# High Level Goal
+## High Level Goal
 
 Our high level goal is to build a dashboard that allows users to interact with movie data from an IMDb dataset of movies and cast members. 
 
-# Description of Goals and Motivations
+## Description of Goals and Motivations
 
 We would like to create a tool for users to easily explore movie data. There are many movies out there, and we figured that building a dashboard with varying functionalities is appropriate to view this data, as it allows users to interact with the data in whatever way they choose. We wanted to build a dashboard with movies because we believe it is an interesting subject, and we were able to find a large, complete dataset with various different variables. We will use the “movies” dataset from IMBd for this project. It includes three different CSVs, one with movie data, one with movie ratings, and one with casting information. We plan to join the three different CSVs together in our analysis, based on common variables such as movie titles and move ids.  
 
@@ -24,7 +24,7 @@ This data comes from [Kaggle](https://www.kaggle.com/stefanoleone992/imdb-extens
 
 The `IMDbmovies.csv` dataset contains data on movies with more than 100 votes scraped from the IMDb website uptill 01/01/2020. The  dataset has `85855` observations and `22` variables.   For our secondary datasets, the `IMDbtitle_principals.csv` dataset has has `835513` observations and `6` variable and the `IMDBratings` has  `85855` observations and `49` variables.
 
-# Weakly Plan of Attack
+## Weakly Plan of Attack
 
 |Week |Activity description |Breakdown of tasks |
 |:----------------|:-----------|:-----------|
