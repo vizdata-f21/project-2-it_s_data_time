@@ -2,9 +2,10 @@
 
 ## Provenance
 
-This data comes from [Kaggle](https://www.kaggle.com/stefanoleone992/imdb-extensive-dataset?select=IMDb+movies.csv). The motivation for curating this dataset was to investigate the aspects that make a movie successful. The dataset contains data on movies with more than 100 votes scraped from the IMDb website till 01/01/2020. The  dataset has `85855` observations and `22` variables. 
+This data comes from [Kaggle](https://www.kaggle.com/stefanoleone992/imdb-extensive-dataset?select=IMDb+movies.csv). The motivation for curating this dataset was to investigate the aspects that make a movie successful. The `IMDbmovies.csv` dataset contains data on movies with more than 100 votes scraped from the IMDb website till 01/01/2020. The  dataset has 85855 observations and 22 variables.   For our secondary datasets, the `IMDbtitle_principals.csv` dataset has  has 835513 observations and 6 variable and the `IMDBratings` has  85855 observations and 49 variables.
 
-## IMDb movies.csv
+## Primary Dataset
+### IMDb movies.csv
 
 |variable         |description |
 |:----------------|:-----------|
@@ -31,7 +32,11 @@ This data comes from [Kaggle](https://www.kaggle.com/stefanoleone992/imdb-extens
 |reviews_from_users| number of reviews from users|
 |reviews_from_critics| number of reviews from critics |
 
-## IMDb title_principals.csv
+## Secondary dataset
+For the secondary datasets, we have provided the data dictionarys for a few variables we think might be relevant to our research.
+
+### IMDb title_principals.csv
+
 
 |variable         |description |
 |:----------------|:-----------|
@@ -42,7 +47,7 @@ This data comes from [Kaggle](https://www.kaggle.com/stefanoleone992/imdb-extens
 |job| specific job done by the cast member|
 |characters| name of the character played|
 
-## IMDbratings.csv
+### IMDbratings.csv
 
 |variable         |description |
 |:----------------|:-----------|
