@@ -174,17 +174,52 @@ pre code {
 </div>
 <div id="description-of-goals-and-motivations" class="section level1">
 <h1>Description of Goals and Motivations</h1>
-<p>We would like to create a tool for users to easily explore movie data. There are many movies out there, and we figured that building a dashboard with varying functionalities is appropriate to view this data, as it allows users to interact with the data in whatever way they choose. We wanted to build a dashboard with movies because we believe it is an interesting subject, and we were able to find a large, complete dataset with various different variables. We will use the “movies” dataset from IMBd for this project. It includes three different CSVs, one with movie data, one with movie ratings, and one with casting information. In total, there are 85,855 movies from 1894 to 2020 with various different variables such as description, average rating, number of votes, and genre. The dataset also includes an aggregated group of 835,513 cast members with information such as their importance in the movie and characters played. We plan to join the three different CSVs together in our analysis, based on common variables such as movie titles and move ids.</p>
+<p>We would like to create a tool for users to easily explore movie data. There are many movies out there, and we figured that building a dashboard with varying functionalities is appropriate to view this data, as it allows users to interact with the data in whatever way they choose. We wanted to build a dashboard with movies because we believe it is an interesting subject, and we were able to find a large, complete dataset with various different variables. We will use the “movies” dataset from IMBd for this project. It includes three different CSVs, one with movie data, one with movie ratings, and one with casting information. We plan to join the three different CSVs together in our analysis, based on common variables such as movie titles and move ids.</p>
 <p>We do not have a particular question or questions we would like to answer yet. Due to the size of our data, we will have to work with it and test its functionality in the dashboard to generate questions that are feasible to answer with this tool. However, upon our initial review of the data, we are confident that we would like to further explore movie ratings, cast members, and genres. Based on the design of our dashboard and initial exploration of the data, we will further refine these areas of interest to come up with specific objectives for our dashboard.</p>
-<div id="research-goal" class="section level2">
-<h2>Research Goal</h2>
-</div>
 <div id="dataset" class="section level2">
 <h2>Dataset</h2>
+<p>This data comes from <a href="https://www.kaggle.com/stefanoleone992/imdb-extensive-dataset?select=IMDb+movies.csv">Kaggle</a>. We have three main csv files, <code>IMDbmovies.csv</code>, <code>IMDbtitle_principals.csv</code>, and <code>IMDbtitle_principals.csv</code>.</p>
+<p>The <code>IMDbmovies.csv</code> dataset contains data on movies with more than 100 votes scraped from the IMDb website uptill 01/01/2020. The dataset has <code>85855</code> observations and <code>22</code> variables. For our secondary datasets, the <code>IMDbtitle_principals.csv</code> dataset has has <code>835513</code> observations and <code>6</code> variable and the <code>IMDBratings</code> has <code>85855</code> observations and <code>49</code> variables.</p>
 </div>
 </div>
 <div id="weakly-plan-of-attack" class="section level1">
 <h1>Weakly Plan of Attack</h1>
+<table>
+<colgroup>
+<col width="41%" />
+<col width="29%" />
+<col width="29%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Week</th>
+<th align="left">Activity description</th>
+<th align="left">Breakdown of tasks</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Week 3</td>
+<td align="left">Finish project proposal by friday</td>
+<td align="left">Data dictionary/dataset inline code- Martha.Read me- Raffay Davis- Proposal writeup. Krystal - Final review before submission on friday.</td>
+</tr>
+<tr class="even">
+<td align="left">Week 4</td>
+<td align="left">Peer Review and submit an updated proposal</td>
+<td align="left">Submit peer reviews- individual assignments. Start working on shiny tutorial (<a href="https://shiny.rstudio.com/tutorial/" class="uri">https://shiny.rstudio.com/tutorial/</a>) - All. Data exploration/come up with initial ideas for visualization</td>
+</tr>
+<tr class="odd">
+<td align="left">Week 5</td>
+<td align="left">Finalize shiny apps for dashboard</td>
+<td align="left">Finalize ideas for shiny apps and assign each member an app according to their interests. Primary areas of focus: aggregate metrics of rating and revenue across Country, Genre, Language. - All Krystal–close issues on proposal.</td>
+</tr>
+<tr class="even">
+<td align="left">Week 6</td>
+<td align="left">Dashboard and Presentation</td>
+<td align="left">Everyone: Choose a dashboard framework and combine shiny apps. Divide up and create presentation slides. Review and practice final presentation</td>
+</tr>
+</tbody>
+</table>
 </div>
 
 
