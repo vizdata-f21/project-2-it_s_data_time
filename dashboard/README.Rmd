@@ -1,7 +1,6 @@
 ---
-title: "README"
----
----
+title: "Dashboard"
+author: "Team It's Data Time: Raffay Rana, Krystal Hu, Davis Jones, Martha Aboagye"
 output: github_document
 ---
 
