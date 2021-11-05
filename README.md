@@ -12,7 +12,7 @@ choose. We wanted to build a dashboard with movies because we believe it
 is an interesting subject, and we were able to find a large, complete
 dataset with various different variables.
 
-## Dataset
+## Approach
 
 We will use the “movies” dataset from IMBd for this project. It includes
 three different CSVs, one with movie data, one with movie ratings, and
