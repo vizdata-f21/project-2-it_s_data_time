@@ -1,6 +1,6 @@
 Proposal
 ================
-It’s Data Time: Raffay Rana, Krystal Hu, Davis Jones, Martha Aboagye
+It’s Data Time: Raffay Rana,Davis Jones, Martha Aboagye，Krystal Hu
 
 ## High Level Goal
 
