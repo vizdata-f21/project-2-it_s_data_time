@@ -27,10 +27,13 @@ answer yet. Due to the size of our data, we will have to work with it
 and test its functionality in the dashboard to generate questions that
 are feasible to answer with this tool. However, upon our initial review
 of the data, we are confident that we would like to further explore
-movie ratings, cast members, and genres. Based on the design of our
-dashboard and initial exploration of the data, we will further refine
-these areas of interest to come up with specific objectives for our
-dashboard.
+movie ratings, cast members, and genres. More specifically, it could be
+interesting to explore the relationships between movie ratings and
+actors in those movies in an effort to gauge the popularity of actors.
+It may also be interesting to see how the frequency of certain genres
+have changed over time. Based on the design of our dashboard and initial
+exploration of the data, we will further refine these areas of interest
+to come up with specific objectives for our dashboard.
 
 ## Dataset
 
