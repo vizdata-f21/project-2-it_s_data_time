@@ -1,8 +1,33 @@
+
 * {
-  font-family: 'Atkinson Hyperlegible',  !important;
+  font-family: 'Courier',  !important;
 }
 
-.navbar-default{
-  background-color: #1F968B;
+
+/*Colour of nav bar Title*/
+.navbar-default .navbar-brand{
+  background-color: #FDE725;
   color: black;
+  font-size:50px;
 }
+
+
+/* Page Tabs background color*/
+.navbar-default{
+  /*background-color: #29AF7F;*/
+  padding: 5px;
+}
+
+/*Color for each page Tab text*/
+.navbar-default .navbar-nav > li  > a{
+  color: white;
+  font-size:30px;
+}
+
+/*Colour of nav bar tabs when hovering and active*/
+.navbar-default .navbar-nav > .active > a,
+                           .navbar-default .navbar-nav > .active > a:focus,
+                           .navbar-default .navbar-nav > .active > a:hover {
+                                background-color: #2D708E ;
+                            }
+
