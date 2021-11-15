@@ -1,6 +1,6 @@
 Proposal
 ================
-It’s Data Time: Raffay Rana, Krystal Hu, Davis Jones, Martha Aboagye
+It’s Data Time: Raffay Rana,Davis Jones, Martha Aboagye，Krystal Hu
 
 ## High Level Goal
 
@@ -27,10 +27,13 @@ answer yet. Due to the size of our data, we will have to work with it
 and test its functionality in the dashboard to generate questions that
 are feasible to answer with this tool. However, upon our initial review
 of the data, we are confident that we would like to further explore
-movie ratings, cast members, and genres. Based on the design of our
-dashboard and initial exploration of the data, we will further refine
-these areas of interest to come up with specific objectives for our
-dashboard.
+movie ratings, cast members, and genres. More specifically, it could be
+interesting to explore the relationships between movie ratings and
+actors in those movies in an effort to gauge the popularity of actors.
+It may also be interesting to see how the frequency of certain genres
+have changed over time. Based on the design of our dashboard and initial
+exploration of the data, we will further refine these areas of interest
+to come up with specific objectives for our dashboard.
 
 ## Dataset
 
@@ -48,9 +51,9 @@ variables.
 
 ## Weakly Plan of Attack
 
-| Week   | Activity description                       | Breakdown of tasks                                                                                                                                                                                                                 |
-|:-------|:-------------------------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Week 3 | Finish project proposal by friday          | Data dictionary/dataset inline code- Martha.Read me- Raffay Davis- Proposal writeup. Krystal - Final review before submission on friday.                                                                                           |
-| Week 4 | Peer Review and submit an updated proposal | Submit peer reviews- individual assignments. Start working on shiny tutorial (<https://shiny.rstudio.com/tutorial/>) - All. Data exploration/come up with initial ideas for visualization                                          |
-| Week 5 | Finalize shiny apps for dashboard          | Finalize ideas for shiny apps and assign each member an app according to their interests. Primary areas of focus: aggregate metrics of rating and revenue across Country, Genre, Language. - All Krystal–close issues on proposal. |
-| Week 6 | Dashboard and Presentation                 | Everyone: Choose a dashboard framework and combine shiny apps. Divide up and create presentation slides. Review and practice final presentation                                                                                    |
+| Week   | Activity description                       | Breakdown of tasks                                                                                                                                                                                                                                                     |
+|:-------|:-------------------------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Week 3 | Finish project proposal by friday          | Data dictionary/dataset inline code- Martha.Read me- Raffay Davis- Proposal writeup. Krystal - Final review before submission on friday.                                                                                                                               |
+| Week 4 | Peer Review and submit an updated proposal | Submit peer reviews- individual assignments. Start working on shiny tutorial (<https://shiny.rstudio.com/tutorial/>) - All. Data exploration/come up with initial ideas for visualization. Join Data Sets by `imdb_title_id` to consolidate data in one major dataset. |
+| Week 5 | Finalize shiny apps for dashboard          | Finalize ideas for shiny apps and assign each member an app according to their interests. Primary areas of focus: aggregate metrics of rating and revenue across Country, Genre, Language. - All Krystal–close issues on proposal.                                     |
+| Week 6 | Dashboard and Presentation                 | Everyone: Choose a dashboard framework and combine shiny apps. Divide up and create presentation slides. Review and practice final presentation                                                                                                                        |
