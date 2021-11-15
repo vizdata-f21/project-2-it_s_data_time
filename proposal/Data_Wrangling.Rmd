@@ -1,0 +1,19 @@
+---
+title: "Data_Wrangling"
+output: html_document
+---
+
+```{r}
+
+library(tidyverse)
+
+ratings <- read_csv("../data/IMDbratings.csv")
+
+movies <- read_csv("../data/IMDb movies.csv") %>%
+  filter(year >= 1950)
+
+movies_ratings <- left_join(movies, ratings, by = "imdb_title_id")
+
+saveRDS(movies_ratings, "movieratings.rds")
+```
+
