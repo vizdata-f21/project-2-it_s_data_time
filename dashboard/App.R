@@ -12,10 +12,9 @@ title_principles <- read_csv("../data/IMDb title_principals.csv")
 ui <- navbarPage(inverse = TRUE, "Analysis of Movies",
                  #Page 1.
 
-                 tabPanel("Gengres"),
-                 tabPanel("Raffay Tab"),
-                 tabPanel("Davis Tab"),
-                 tabPanel("Martha Tab")
+                 tabPanel("Genres or Krystals Tab"),
+                 tabPanel("Scores Tab"),
+                 tabPanel("Peoples tab.")
 
 
 )
