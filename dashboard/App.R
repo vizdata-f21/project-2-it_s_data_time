@@ -19,7 +19,7 @@ title_principles <- read_csv("../data/IMDb title_principals.csv")
 country <- movies_ratings %>%
    filter(!is.na(country)) %>%
    mutate(
-      country_other = fct_lump_min(country,min = 100)
+      country_other = fct_lump_min(country,min = 300)
    ) %>%
    distinct(country_other) %>%
    arrange(country_other) %>%
