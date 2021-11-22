@@ -1,4 +1,13 @@
 
+/*Import Atkinson Hyperlegible*/
+
+@font-face {
+  src: url("Web Fonts/TTF");
+  font-family: "Hyperlegible";
+}
+
+
+
 * {
   font-family: 'Courier',  !important;
 }
