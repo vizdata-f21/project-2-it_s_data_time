@@ -1,0 +1,44 @@
+
+/*Import Atkinson Hyperlegible*/
+
+@font-face {
+  src: url("Web Fonts/TTF");
+  font-family: "Hyperlegible";
+}
+
+
+* {
+  font-family: 'Hyperlegible',  !important;
+}
+
+
+/*Colour of nav bar Title*/
+.navbar-default .navbar-brand{
+  background-color: #FDE725;
+  color: black;
+  font-size:50px;
+  font-family: 'Hyperlegible';
+  font-style: 'Italic';
+}
+
+
+/* Page Tabs background color*/
+.navbar-default{
+  /*background-color: #29AF7F;*/
+  padding: 5px;
+}
+
+/*Color for each page Tab text*/
+.navbar-default .navbar-nav > li  > a{
+  color: white;
+  font-size:30px;
+    font-family: 'Hyperlegible';
+}
+
+/*Colour of nav bar tabs when hovering and active*/
+.navbar-default .navbar-nav > .active > a,
+                           .navbar-default .navbar-nav > .active > a:focus,
+                           .navbar-default .navbar-nav > .active > a:hover {
+                                background-color: #2D708E ;
+                            }
+
