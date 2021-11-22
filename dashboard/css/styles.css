@@ -7,9 +7,8 @@
 }
 
 
-
 * {
-  font-family: 'Courier',  !important;
+  font-family: 'Hyperlegible',  !important;
 }
 
 
@@ -18,6 +17,8 @@
   background-color: #FDE725;
   color: black;
   font-size:50px;
+  font-family: 'Hyperlegible';
+  font-style: 'Italic';
 }
 
 
@@ -31,6 +32,7 @@
 .navbar-default .navbar-nav > li  > a{
   color: white;
   font-size:30px;
+    font-family: 'Hyperlegible';
 }
 
 /*Colour of nav bar tabs when hovering and active*/

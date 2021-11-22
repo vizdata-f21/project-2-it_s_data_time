@@ -2,6 +2,8 @@
 library(shiny)
 library(tidyverse)
 library(scales)
+library(extrafont)
+
 
 # Load data ---------------------------------------------------------
 
