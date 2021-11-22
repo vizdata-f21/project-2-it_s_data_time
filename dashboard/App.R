@@ -43,7 +43,10 @@ ui <- navbarPage(inverse = TRUE, "Analysis of Movies",
                        ),
                        mainPanel(
                           plotOutput(outputId = "len_rating"),
-                          plotOutput(outputId = "budget_rating")
+                          plotOutput(outputId = "budget_rating"),
+                          plotOutput(outputId = "yr_plot",
+                                     hover = hoverOpts(id ="plot_hover")),
+                          verbatimTextOutput("hover_info")
                        )
                     )),
                  tabPanel("Davis Tab"),
@@ -55,14 +58,24 @@ ui <- navbarPage(inverse = TRUE, "Analysis of Movies",
 
  server <- function(input, output,session) {
 
+    # To Do for later:
+      # Pivot Longer Age Breakdowns and Gender Breadowns and make it into a
+      # Selection menu
+
    movie_dt <- reactive({
       movies_ratings %>%
          filter(country %in% input$Country)
    })
 
-   # Things to change:
-   #  Cast budget into numeric
-   #  Keep currencies constant
+
+   movie_yr_ratings <- reactive({
+      movies_ratings %>%
+         filter(country %in% input$Country) %>%
+         group_by(year) %>%
+         summarise(med = median(avg_vote), count = n())
+   })
+
+
    movie_budget <- reactive({
       movies_ratings %>%
          filter(country %in% input$Country) %>%
@@ -85,16 +98,16 @@ ui <- navbarPage(inverse = TRUE, "Analysis of Movies",
 
    output$budget_rating <- renderPlot(
       ggplot(data = movie_budget(),
-             aes(x = budget_cat,
-                 y = mean_vote,
+             aes(y = budget_cat,
+                 x = mean_vote,
                  color = mean_vote)) +
          geom_point()
    )
 
    output$len_rating <- renderPlot(
       ggplot(data = movie_dt(),
-             aes(x = duration,
-                 y = median_vote,
+             aes(y = duration,
+                 x = median_vote,
                  color = median_vote)) +
          geom_point()
    )
@@ -103,6 +116,25 @@ ui <- navbarPage(inverse = TRUE, "Analysis of Movies",
      # Remind Shiny it is a reactive objective
      # DO NOT FORGET THIS
      movie_dt()
+   })
+
+   output$yr_plot <- renderPlot(
+      ggplot(data = movie_yr_ratings(),
+             aes(y = med,
+                 x = year)) +
+         geom_point(aes(size = count)) +
+         geom_line()
+   )
+
+   output$hover_info <- renderPrint({
+      if(!is.null(input$plot_hover)){
+         hover=input$plot_hover
+         dist=sqrt((hover$x-movie_yr_ratings()$year)^2+(hover$y-movie_yr_ratings()$med)^2)
+         cat("Total movies")
+         if(min(dist) < 3)
+            movie_yr_ratings()$count[which.min(dist)]
+      }
+
    })
 
  }
