@@ -11,13 +11,15 @@
   font-family: 'Hyperlegible';
 }
 
-
+.h1{
+  font-size: 14px;
+}
 
 /*Colour of nav bar Title*/
 .navbar-default .navbar-brand{
   background-color: #FDE725;
   color: black;
-  font-size:70px;
+  font-size:30px;
   font-family: 'Hyperlegible';
   font-style: 'Italic';
 }
@@ -26,7 +28,7 @@
 /*Color for each page Tab text*/
 .navbar-default .navbar-nav > li  > a{
   color: white;
-  font-size:50px;
+  font-size:20px;
   font-family: 'Hyperlegible';
 }
 

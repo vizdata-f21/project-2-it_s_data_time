@@ -44,7 +44,7 @@ ui <- navbarPage(
         )
       ),
       mainPanel(
-        h1(strong(em("\" Filmmaking is a chance to live many lifetimes.\""), "- Robert Altman")),
+        h1(strong(em("\"Filmmaking is a chance to live many lifetimes.\""), "- Robert Altman")),
         textOutput("timeperiod")
       )
     ))
@@ -90,9 +90,39 @@ server <- function(input, output) {
       )
     } else {
       if (input$start == "writers") {
-        textInput("writers", "Write name contains (e.g., Spike Lee)")
+        list(
+        textInput("writers", "Write name contains (e.g., Tyler Perry)"),
+        checkboxGroupInput("connections",
+                           "What connections do you want to visualize:",
+                           choices = c("Directors" = "directors", "Actors" = "actors"),
+                           selected = "actors",
+                           inline = TRUE
+        ),
+        if (input$century == "1") {
+          sliderInput("year", "Year released", 2000, 2020, value = c(2000, 2020),
+                      sep = "")
+        } else {
+          sliderInput("year", "Year released", 1900,  1999, value = c(1900, 1999),
+                      sep = "")
+        }
+        )
       } else {
-        textInput("actors", "Actor name contains (e.g., Brad Pitt)")
+        list(textInput("actors", "Actor name contains (e.g., Brad Pitt)"),
+             checkboxGroupInput("connections",
+                                "What connections do you want to visualize:",
+                                choices = c("Writers" = "writers", "Directors" = "directors"),
+                                selected = "actors",
+                                inline = TRUE
+             ),
+             if (input$century == "1") {
+               sliderInput("year", "Year released", 2000, 2020, value = c(2000, 2020),
+                           sep = "")
+             } else {
+               sliderInput("year", "Year released", 1900,  1999, value = c(1900, 1999),
+                           sep = "")
+             }
+
+             )
       }
     }
   })
