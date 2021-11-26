@@ -1,0 +1,29 @@
+---
+title: "peopleeda"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(forcats)
+library(dplyr)
+library(stringr)
+```
+
+
+```{r}
+ratings <- read_csv("../data/IMDbratings.csv")
+movies <- read_csv("../data/IMDb movies.csv")
+title_principles <- read_csv("../data/IMDb title_principals.csv")
+```
+
+```{r}
+people <-movies%>%
+  mutate(century = case_when(
+    year >=2000 ~ "1",
+    year>= 900 & year <2000 ~ "0"
+  ))  
+
+
+```
