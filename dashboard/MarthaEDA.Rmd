@@ -1,6 +1,8 @@
 ---
 title: "peopleeda"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -9,6 +11,8 @@ library(tidyverse)
 library(forcats)
 library(dplyr)
 library(stringr)
+library(janitor)
+library(tidytext)
 ```
 
 
@@ -27,3 +31,38 @@ people <-movies%>%
 
 
 ```
+
+ 
+### Filtering for most frequent actors by Director Selected.
+
+[ ] A can be renamed to a temporary variable that makes it easier to keep track of the changing dataset. 
+
+[ ] Script for filtering based on director,actor or writer can be a function call. 
+```{r}
+A<-people%>%
+  filter(director == "Spike Lee")%>%
+  select(actors)
+
+
+
+unnest_tokens(A, split, actors, token = str_split, pattern = ",")%>%
+   group_by(split)%>%
+  count()%>%
+  arrange(desc(n))%>%
+  head(20)
+
+
+B<-people%>%
+  filter(director == "Spike Lee")%>%
+  select(writer)
+
+
+
+unnest_tokens(B, split, writer, token = str_split, pattern = ",")%>%
+   group_by(split)%>%
+  count()%>%
+  arrange(desc(n))%>%
+  head(20)
+
+```
+
