@@ -40,18 +40,22 @@ ui <- navbarPage(inverse = TRUE, "Analysis of Movies",
                              label = "Select countries",
                              choices = country
                           ),
-                            sliderInput(
-                              inputId = "ylim",
-                              label = "Select Year Range",
-                              min = 1950,
-                              value = c(1950, 2020),
-                              max = max(movies_ratings$year),
-                              width = "100%",
-                              step = 5
-                            )
-                          ),
+                          sliderInput(
+                             inputId = "ylim",
+                             label = "Select Year Range",
+                             min = 1950,
+                             value = c(1950, 2020),
+                             max = max(movies_ratings$year),
+                             width = "100%",
+                             step = 5,
+                             sep = ""
+                          )
+                        ),
                        mainPanel(
-                          plotOutput(outputId = "len_rating"),
+                          splitLayout(
+                             plotOutput(outputId = "male_duration_rating"),
+                             plotOutput(outputId = "female_duration_rating")
+                          ),
                           plotOutput(outputId = "budget_rating"),
                           plotOutput(outputId = "yr_plot",
                                      hover = hoverOpts(id ="plot_hover")),
@@ -71,15 +75,27 @@ ui <- navbarPage(inverse = TRUE, "Analysis of Movies",
       # Pivot Longer Age Breakdowns and Gender Breadowns and make it into a
       # Selection menu
 
-   movie_dt <- reactive({
-      movies_ratings %>%
-         filter(country %in% input$Country)
+    movie_duration <- reactive({
+       movies_ratings %>%
+          filter(country %in% input$Country) %>%
+          filter(year >= min(input$ylim) &&
+                    year <= max(input$ylim)) %>%
+          mutate(duration_cat = cut(
+             duration,
+             breaks = c(-Inf, 41, 151, Inf),
+             labels = c(
+                "Short Film: <40 mins",
+                "Feature Film: 41-150 mins",
+                "Long Film: >150 mins"
+             )
+          ))
    })
 
 
    movie_yr_ratings <- reactive({
       movies_ratings %>%
          filter(country %in% input$Country) %>%
+         filter(year >= min(input$ylim) && year <= max(input$ylim)) %>%
          group_by(year) %>%
          summarise(med = median(avg_vote), count = n())
    })
@@ -88,38 +104,44 @@ ui <- navbarPage(inverse = TRUE, "Analysis of Movies",
    movie_budget <- reactive({
       movies_ratings %>%
          filter(country %in% input$Country) %>%
+         filter(year >= min(input$ylim) && year <= max(input$ylim)) %>%
          filter(!is.na(budget)) %>%
-         mutate(budget_cat1 = case_when(
-            budget < 500000 ~ "< $500k",
-            budget <= 500000 ~ "$500k-$5M",
-            budget <= 2000000 ~ "$5M-$20M",
-            budget <= 10000000 ~ "$5M-$100M",
-            TRUE ~ ">$100M"
+         mutate(budget_cat = cut(
+            parse_number(budget),
+            breaks = c(-Inf, 500000, 2000000, 10000000, Inf),
+            labels = c("< $500k", "$500k-$20M", "$20M-$100M", ">$100M")
          ),
-         budget_cat = cut(parse_number(budget),
-            breaks=c(-Inf, 500000, 2000000, 10000000, Inf),
-            labels=c("< $500k","$500k-$20M","$20M-$100M",">$100M")
+         rating_cat = cut(
+            median_vote,
+            breaks = c(-Inf, 4, 7, Inf),
+            labels = c("0-3", "4-7", "8-10")
          )
-         ) %>%
-         group_by(budget_cat) %>%
-         summarise(mean_vote = mean(mean_vote))
+         )
    })
 
    output$budget_rating <- renderPlot(
       ggplot(data = movie_budget(),
-             aes(y = budget_cat,
-                 x = mean_vote,
-                 color = mean_vote)) +
-         geom_point()
+             aes(x = rating_cat,
+                 fill = budget_cat)) +
+         geom_bar(position="dodge")
    )
 
-   output$len_rating <- renderPlot(
-      ggplot(data = movie_dt(),
-             aes(y = duration,
-                 x = median_vote,
-                 color = median_vote)) +
-         geom_point()
+
+   output$male_duration_rating <- renderPlot(
+      ggplot(data = movie_duration(),
+             aes(y = males_allages_avg_vote,
+                 x = duration_cat)) +
+         geom_boxplot(fill = "blue")
    )
+
+   output$female_duration_rating <- renderPlot(
+      ggplot(data = movie_duration(),
+             aes(y = females_allages_avg_vote,
+                 x = duration_cat)) +
+         geom_boxplot(fill = "red")
+   )
+
+
 
    output$datatb<- DT::renderDataTable({
      # Remind Shiny it is a reactive objective
@@ -142,9 +164,10 @@ ui <- navbarPage(inverse = TRUE, "Analysis of Movies",
       if(!is.null(input$plot_hover)){
          hover=input$plot_hover
          dist=sqrt((hover$x-movie_yr_ratings()$year)^2+(hover$y-movie_yr_ratings()$med)^2)
-         cat("Total movies")
-         if(min(dist) < 3)
-            movie_yr_ratings()$count[which.min(dist)]
+         cat("Total movies in ")
+         cat(movie_yr_ratings()$year[which.min(dist)])
+         cat(": ")
+         cat(movie_yr_ratings()$count[which.min(dist)])
       }
 
    })

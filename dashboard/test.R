@@ -85,6 +85,12 @@ server <- function(input, output,session) {
       ) %>%
       group_by(budget_cat) %>%
       summarise(mean_vote = mean(mean_vote))
+
+
+
+      # Average Duration and Budget in the table
+
+
   })
 
   director_rating <- reactive({
