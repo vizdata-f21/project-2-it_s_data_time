@@ -39,8 +39,17 @@ ui <- navbarPage(inverse = TRUE, "Analysis of Movies",
                              inputId = "Country",
                              label = "Select countries",
                              choices = country
-                          )
-                       ),
+                          ),
+                            sliderInput(
+                              inputId = "ylim",
+                              label = "Select Year Range",
+                              min = 1950,
+                              value = c(1950, 2020),
+                              max = max(movies_ratings$year),
+                              width = "100%",
+                              step = 5
+                            )
+                          ),
                        mainPanel(
                           plotOutput(outputId = "len_rating"),
                           plotOutput(outputId = "budget_rating"),
@@ -123,7 +132,10 @@ ui <- navbarPage(inverse = TRUE, "Analysis of Movies",
              aes(y = med,
                  x = year)) +
          geom_point(aes(size = count)) +
-         geom_line()
+         geom_line() +
+         scale_x_continuous(
+            limits = input$ylim
+         )
    )
 
    output$hover_info <- renderPrint({
@@ -138,6 +150,19 @@ ui <- navbarPage(inverse = TRUE, "Analysis of Movies",
    })
 
  }
+
+ #year slider
+ observeEvent(input$year, {
+   updateSliderInput(
+     inputId = "ylim",
+     min = min(movie_yr_ratings()$year),
+     max = max(movie_yr_ratings()$year),
+     value = c(
+       min(movie_yr_ratings()$year),
+       max(movie_yr_ratings()$year)
+     )
+   )
+ })
 
 
 
