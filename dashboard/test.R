@@ -1,6 +1,8 @@
 # Load packages -----------------------------------------------------
 library(shiny)
 library(tidyverse)
+library(patchwork)
+library(gt)
 
 # Load data ---------------------------------------------------------
 
@@ -45,9 +47,14 @@ ui <- navbarPage(inverse = TRUE, "Analysis of Movies",
                        )
                      ),
                      mainPanel(
-                       plotOutput(outputId = "len_rating"),
-                       plotOutput(outputId = "budget_rating"),
-                       tableOutput(outputId = "directors")
+                       tabsetPanel(
+                         tabPanel("Rating & Length",
+                                   plotOutput(outputId = "len_rating")),
+                         tabPanel("Budget & Rating",
+                                   plotOutput(outputId = "budget_rating")),
+                         tabPanel("Directors & Rating",
+                                   gt_output(outputId = "directors"))
+                     )
                      )
                    )),
                  tabPanel("Davis Tab"),
@@ -90,15 +97,17 @@ server <- function(input, output,session) {
   director_rating <- reactive({
     movies_ratings %>%
       filter(country %in% input$Country) %>%
-      select(c(director, mean_vote, country)) %>%
+      select(c(director, mean_vote, country, duration)) %>%
       separate(director, c("director1", "director2"),
              ", ") %>%
       pivot_longer(starts_with("director"),
                  names_to = "temp", values_to = "director") %>%
       na.omit() %>%
       group_by(director) %>%
-      mutate(avg_ratings = mean(mean_vote)) %>%
-      select(-c(temp, mean_vote)) %>%
+      mutate(avg_ratings = mean(mean_vote),
+             count = n(),
+             avg_duration = mean (duration)) %>%
+      select(-c(temp, mean_vote, duration)) %>%
       arrange(desc(avg_ratings), director) %>%
       distinct() %>%
       ungroup() %>%
@@ -122,8 +131,21 @@ server <- function(input, output,session) {
       geom_point()
   )
 
-  output$directors <- renderTable({
-    director_rating()
+  output$directors <- render_gt({
+    director_rating() %>%
+      gt() %>%
+      cols_label(director = "Director",
+                 country = "Country",
+                 avg_ratings = "Average Rating",
+                 count = "# Films") %>%
+      tab_spanner(
+        label = "Top 10 Most Highly Rated Directors",
+        columns = everything()) %>%
+      fmt_number(
+        columns = where(is.numeric),
+        decimals = 2) %>%
+      cols_align(align = "right", columns = where(is.numeric))%>%
+      cols_align(align = "left", columns = where(is.character))
   })
 
   output$datatb<- DT::renderDataTable({

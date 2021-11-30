@@ -7,6 +7,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 library(ggplot2)
 library(tidyverse)
+library(dplyr)
 ```
 
 ```{r}
@@ -61,14 +62,16 @@ country <- movies_ratings %>%
 ```{r}
 
 directors_ratings <- movies_ratings %>%
-  select(c(director, mean_vote, country)) %>%
+  select(c(director, mean_vote, country, duration)) %>%
   separate(director, c("director1", "director2"),
            ", ") %>%
   pivot_longer(starts_with("director"), 
                names_to = "temp", values_to = "director") %>%
   na.omit() %>%
   group_by(director) %>%
-  mutate(avg_ratings = mean(mean_vote)) %>%
+  mutate(avg_ratings = mean(mean_vote),
+         count = n(),
+         avg_duration = mean(duration)) %>%
   select(-c(temp, mean_vote)) %>%
   filter(country == "USA") %>%
   arrange(desc(avg_ratings)) %>%
