@@ -53,10 +53,26 @@ ui <- navbarPage(inverse = TRUE, "Analysis of Movies",
                          tabPanel("Budget & Rating",
                                    plotOutput(outputId = "budget_rating")),
                          tabPanel("Directors & Rating",
-                                   gt_output(outputId = "directors"))
+                                  sidebarLayout(
+                                    sidebarPanel(
+                                      selectInput(
+                                        inputId = "Top",
+                                        label = "Top __ Directors",
+                                        choices = c(10, 20, 50)
+                                        ),
+                                      selectInput(
+                                        inputId = "Num_films",
+                                        label = "Minimum number of films",
+                                        choices = c(1, 2, 3, 4, 5, 6, 7,
+                                                    8, 9, 10)
+                                      )
+                                    ),
+                                    mainPanel(
+                                      gt_output(outputId = "directors"))
+                                  )
                      )
                      )
-                   )),
+                   ))),
                  tabPanel("Davis Tab"),
                  tabPanel("Martha Tab")
 )
@@ -111,13 +127,14 @@ server <- function(input, output,session) {
       na.omit() %>%
       group_by(director) %>%
       mutate(avg_ratings = mean(mean_vote),
-             count = n(),
-             avg_duration = mean (duration)) %>%
+             count = n()) %>%
+             #avg_duration = mean (duration)) %>%
       select(-c(temp, mean_vote, duration)) %>%
       arrange(desc(avg_ratings), director) %>%
       distinct() %>%
       ungroup() %>%
-      slice(1:10)
+      filter(count >= input$Num_films) %>%
+      slice(1:input$Top)
   })
 
 

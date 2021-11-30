@@ -77,6 +77,7 @@ directors_ratings <- movies_ratings %>%
   arrange(desc(avg_ratings)) %>%
   distinct() %>%
   ungroup() %>%
+  filter(count >= 3) %>%
   slice(1:10)
 
   
