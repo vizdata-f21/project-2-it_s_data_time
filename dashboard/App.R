@@ -1,7 +1,7 @@
 # Load packages -----------------------------------------------------
 library(shiny)
 library(tidyverse)
-
+library(gt)
 # Load data ---------------------------------------------------------
 
 ratings <- read_csv("../data/IMDbratings.csv")
@@ -16,6 +16,12 @@ title_principles <- read_csv("../data/IMDb title_principals.csv")
 
 # Country Column
 
+movies_ratings <- movies_ratings %>%
+   separate(country, c("country1", "country2"), ", ") %>%
+   pivot_longer(starts_with("country"), names_to = "temp",
+                values_to = "country") %>%
+   filter(!is.na(country))
+
 country <- movies_ratings %>%
    filter(!is.na(country)) %>%
    mutate(
@@ -24,7 +30,6 @@ country <- movies_ratings %>%
    distinct(country_other) %>%
    arrange(country_other) %>%
    pull()
-
 
 # Shiny UI
 ui <- navbarPage(inverse = TRUE, "Analysis of Movies",
@@ -39,7 +44,7 @@ ui <- navbarPage(inverse = TRUE, "Analysis of Movies",
                              inputId = "Country",
                              label = "Select countries",
                              choices = country
-                          ),
+                             ),
                           sliderInput(
                              inputId = "ylim",
                              label = "Select Year Range",
@@ -49,22 +54,57 @@ ui <- navbarPage(inverse = TRUE, "Analysis of Movies",
                              width = "100%",
                              step = 5,
                              sep = ""
-                          )
-                        ),
-                       mainPanel(
-                          splitLayout(
-                             plotOutput(outputId = "male_duration_rating"),
-                             plotOutput(outputId = "female_duration_rating")
+                             )
                           ),
-                          plotOutput(outputId = "budget_rating"),
-                          plotOutput(outputId = "yr_plot",
-                                     hover = hoverOpts(id ="plot_hover")),
-                          verbatimTextOutput("hover_info")
+                       mainPanel(
+                          tabsetPanel(
+                             tabPanel("rename",
+                                      splitLayout(
+                                         plotOutput(
+                                            outputId = "male_duration_rating"
+                                            ),
+                                         plotOutput(
+                                            outputId = "female_duration_rating"
+                                            )
+                                         )
+                                      ),
+                             tabPanel("rename2",
+                                   plotOutput(
+                                      outputId = "budget_rating"
+                                      ),
+                                   plotOutput(outputId = "yr_plot",
+                                              hover = hoverOpts(
+                                                 id ="plot_hover")
+                                              ),
+                                   verbatimTextOutput("hover_info")
+                                   ),
+                             tabPanel("Directors & Rating",
+                                      sidebarLayout(
+                                         sidebarPanel(
+                                            selectInput(
+                                               inputId = "Top",
+                                               label = "Top __ Directors",
+                                               choices = c(10, 20, 50)
+                                               ),
+                                            selectInput(
+                                               inputId = "Num_films",
+                                               label = "Minimum number of films",
+                                               choices = c(1, 2, 3, 4, 5, 6, 7,
+                                                           8, 9, 10)
+                                               )
+                                            ),
+                                         mainPanel(
+                                            gt_output(outputId = "directors")
+                                            )
+                                         )
+                                      )
+                             )
+                          )
                        )
-                    )),
+                    ),
                  tabPanel("Davis Tab"),
                  tabPanel("Martha Tab")
-)
+                 )
 
 
 # SHINY SERVER
@@ -119,6 +159,31 @@ ui <- navbarPage(inverse = TRUE, "Analysis of Movies",
          )
    })
 
+
+   director_rating <- reactive({
+      movies_ratings %>%
+         filter(country %in% input$Country) %>%
+         filter(year >= min(input$ylim) &&
+                   year <= max(input$ylim)) %>%
+         select(c(director, mean_vote, country, duration)) %>%
+         separate(director, c("director1", "director2"),
+                  ", ") %>%
+         pivot_longer(starts_with("director"),
+                      names_to = "temp", values_to = "director") %>%
+         na.omit() %>%
+         group_by(director) %>%
+         mutate(avg_ratings = mean(mean_vote),
+                count = n()) %>%
+         #avg_duration = mean (duration)) %>%
+         select(-c(temp, mean_vote, duration)) %>%
+         arrange(desc(avg_ratings), director) %>%
+         distinct() %>%
+         ungroup() %>%
+         filter(count >= input$Num_films) %>%
+         slice(1:input$Top)
+   })
+
+
    output$budget_rating <- renderPlot(
       ggplot(data = movie_budget(),
              aes(x = rating_cat,
@@ -154,7 +219,22 @@ ui <- navbarPage(inverse = TRUE, "Analysis of Movies",
          )
    )
 
-
+   output$directors <- render_gt({
+      director_rating() %>%
+         gt() %>%
+         cols_label(director = "Director",
+                    country = "Country",
+                    avg_ratings = "Average Rating",
+                    count = "# Films") %>%
+         tab_spanner(
+            label = "Top 10 Most Highly Rated Directors",
+            columns = everything()) %>%
+         fmt_number(
+            columns = where(is.numeric),
+            decimals = 2) %>%
+         cols_align(align = "right", columns = where(is.numeric))%>%
+         cols_align(align = "left", columns = where(is.character))
+   })
 
    output$datatb<- DT::renderDataTable({
      # Remind Shiny it is a reactive objective
