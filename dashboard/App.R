@@ -44,16 +44,6 @@ ui <- navbarPage(inverse = TRUE, "Analysis of Movies",
                              inputId = "Country",
                              label = "Select countries",
                              choices = country
-                             ),
-                          sliderInput(
-                             inputId = "ylim",
-                             label = "Select Year Range",
-                             min = 1950,
-                             value = c(1950, 2020),
-                             max = max(movies_ratings$year),
-                             width = "100%",
-                             step = 5,
-                             sep = ""
                              )
                           ),
                        mainPanel(
@@ -72,6 +62,16 @@ ui <- navbarPage(inverse = TRUE, "Analysis of Movies",
                                    plotOutput(
                                       outputId = "budget_rating"
                                       ),
+                                   sliderInput(
+                                      inputId = "ylim",
+                                      label = "Select Year Range",
+                                      min = 1950,
+                                      value = c(1950, 2020),
+                                      max = 2020,
+                                      width = "100%",
+                                      step = 5,
+                                      sep = ""
+                                   ),
                                    plotOutput(outputId = "yr_plot",
                                               hover = hoverOpts(
                                                  id ="plot_hover")
@@ -111,15 +111,21 @@ ui <- navbarPage(inverse = TRUE, "Analysis of Movies",
 
  server <- function(input, output,session) {
 
+    ######################
+    observeEvent(input$ylim, {
+       print(paste0("You have chosen: ", max(input$ylim)))
+       print(paste0("You have chosen: ", min(input$ylim)))
+    })
+
     # To Do for later:
       # Pivot Longer Age Breakdowns and Gender Breadowns and make it into a
       # Selection menu
 
+
+    # Duration Plot Data Set
     movie_duration <- reactive({
        movies_ratings %>%
           filter(country %in% input$Country) %>%
-          filter(year >= min(input$ylim) &&
-                    year <= max(input$ylim)) %>%
           mutate(duration_cat = cut(
              duration,
              breaks = c(-Inf, 41, 151, Inf),
@@ -129,37 +135,39 @@ ui <- navbarPage(inverse = TRUE, "Analysis of Movies",
                 "Long Film: >150 mins"
              )
           ))
+
    })
 
-
+   # Year Rating Data Set
    movie_yr_ratings <- reactive({
       movies_ratings %>%
          filter(country %in% input$Country) %>%
-         filter(year >= min(input$ylim) && year <= max(input$ylim)) %>%
+         #filter(year >= min(input$ylim) && year <= max(input$ylim)) %>%
          group_by(year) %>%
          summarise(med = median(avg_vote), count = n())
    })
 
 
+   # Budget Rating Dataset
    movie_budget <- reactive({
       movies_ratings %>%
          filter(country %in% input$Country) %>%
-         filter(year >= min(input$ylim) && year <= max(input$ylim)) %>%
          filter(!is.na(budget)) %>%
+         filter(!is.na(median_vote)) %>%
          mutate(budget_cat = cut(
             parse_number(budget),
-            breaks = c(-Inf, 500000, 2000000, 10000000, Inf),
+            breaks = c(-2, 500000, 2000000, 10000000, Inf),
             labels = c("< $500k", "$500k-$20M", "$20M-$100M", ">$100M")
          ),
          rating_cat = cut(
             median_vote,
-            breaks = c(-Inf, 4, 7, Inf),
+            breaks = c(0, 4, 7, 11),
             labels = c("0-3", "4-7", "8-10")
          )
          )
    })
 
-
+   # Director Rating Dataset
    director_rating <- reactive({
       movies_ratings %>%
          filter(country %in% input$Country) %>%
@@ -184,6 +192,7 @@ ui <- navbarPage(inverse = TRUE, "Analysis of Movies",
    })
 
 
+   # Budget rating plot
    output$budget_rating <- renderPlot(
       ggplot(data = movie_budget(),
              aes(x = rating_cat,
@@ -241,6 +250,9 @@ ui <- navbarPage(inverse = TRUE, "Analysis of Movies",
      # DO NOT FORGET THIS
      movie_dt()
    })
+
+
+
 
    output$yr_plot <- renderPlot(
       ggplot(data = movie_yr_ratings(),
