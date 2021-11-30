@@ -20,7 +20,50 @@ movies_ratings <- movies_ratings %>%
    separate(country, c("country1", "country2"), ", ") %>%
    pivot_longer(starts_with("country"), names_to = "temp",
                 values_to = "country") %>%
-   filter(!is.na(country))
+   filter(!is.na(country)) %>%
+   pivot_longer(
+      cols = c(
+         males_0age_avg_vote,
+         males_18age_avg_vote,
+         males_30age_avg_vote,
+         males_45age_avg_vote,
+         males_allages_avg_vote,
+         females_0age_avg_vote,
+         females_18age_avg_vote,
+         females_30age_avg_vote,
+         females_45age_avg_vote,
+         females_allages_avg_vote
+      ),
+      names_to = "age_Cat",
+      values_to = "rating_age"
+   ) %>%
+   mutate(
+      voter_age = case_when(
+         age_Cat == "males_0age_avg_vote" ~ "0-17",
+         age_Cat == "males_18age_avg_vote" ~ "18-29",
+         age_Cat == "males_30age_avg_vote" ~ "30-45",
+         age_Cat == "males_45age_avg_vote" ~ "over_45",
+         age_Cat == "males_allages_avg_vote" ~ "All",
+         age_Cat == "females_0age_avg_vote "~ "0-17",
+         age_Cat == "females_18age_avg_vote" ~ "18-29",
+         age_Cat == "females_30age_avg_vote" ~ "30-45",
+         age_Cat == "females_45age_avg_vote" ~ "over_45",
+         age_Cat == "females_allages_avg_vote" ~ "All"
+      ),
+      voter_gender = case_when(
+         age_Cat == "males_0age_avg_vote" ~ "M",
+         age_Cat == "males_18age_avg_vote" ~ "M",
+         age_Cat == "males_30age_avg_vote" ~ "M",
+         age_Cat == "males_45age_avg_vote" ~ "M",
+         age_Cat == "males_allages_avg_vote" ~ "M",
+         TRUE ~ "F"
+      )
+   )
+
+ages <- movies_ratings %>%
+   filter(!is.na(voter_age))
+   distinct(voter_age) %>%
+   pull()
 
 country <- movies_ratings %>%
    filter(!is.na(country)) %>%
@@ -44,7 +87,12 @@ ui <- navbarPage(inverse = TRUE, "Analysis of Movies",
                              inputId = "Country",
                              label = "Select countries",
                              choices = country
-                             )
+                             ),
+                          radioButtons(
+                             inputId = "Age",
+                             label = "Choose Age",
+                             choices = ages
+                          )
                           ),
                        mainPanel(
                           tabsetPanel(
@@ -112,10 +160,6 @@ ui <- navbarPage(inverse = TRUE, "Analysis of Movies",
  server <- function(input, output,session) {
 
     ######################
-    observeEvent(input$ylim, {
-       print(paste0("You have chosen: ", max(input$ylim)))
-       print(paste0("You have chosen: ", min(input$ylim)))
-    })
 
     # To Do for later:
       # Pivot Longer Age Breakdowns and Gender Breadowns and make it into a
@@ -134,7 +178,14 @@ ui <- navbarPage(inverse = TRUE, "Analysis of Movies",
                 "Feature Film: 41-150 mins",
                 "Long Film: >150 mins"
              )
-          ))
+          )) %>%
+          pivot_longer(
+             cols = c(
+
+             ),
+             names_to = "Gender",
+             values_to = "Rating"
+          )
 
    })
 
@@ -245,11 +296,11 @@ ui <- navbarPage(inverse = TRUE, "Analysis of Movies",
          cols_align(align = "left", columns = where(is.character))
    })
 
-   output$datatb<- DT::renderDataTable({
-     # Remind Shiny it is a reactive objective
-     # DO NOT FORGET THIS
-     movie_dt()
-   })
+   # output$datatb<- DT::renderDataTable({
+   #   Remind Shiny it is a reactive objective
+   #   DO NOT FORGET THIS
+   #   movie_dt()
+   # })
 
 
 
