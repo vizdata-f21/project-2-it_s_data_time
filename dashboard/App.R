@@ -123,7 +123,12 @@ ui <- navbarPage(inverse = TRUE, "Analysis of Movies",
       ggplot(data = movie_budget(),
              aes(x = rating_cat,
                  fill = budget_cat)) +
-         geom_bar(position="dodge")
+         geom_bar(position="dodge") +
+         labs(
+            fill = "Budget category",
+            x = "Rating Category",
+            y = "Count"
+         )
    )
 
 
@@ -131,14 +136,22 @@ ui <- navbarPage(inverse = TRUE, "Analysis of Movies",
       ggplot(data = movie_duration(),
              aes(y = males_allages_avg_vote,
                  x = duration_cat)) +
-         geom_boxplot(fill = "blue")
+         geom_boxplot(fill = "blue") +
+         labs(
+            x = "Duration Category",
+            y = "Average rating by Males"
+         )
    )
 
    output$female_duration_rating <- renderPlot(
       ggplot(data = movie_duration(),
              aes(y = females_allages_avg_vote,
                  x = duration_cat)) +
-         geom_boxplot(fill = "red")
+         geom_boxplot(fill = "red") +
+         labs(
+            x = "Duration Category",
+            y = "Average rating by Females"
+         )
    )
 
 
@@ -157,6 +170,10 @@ ui <- navbarPage(inverse = TRUE, "Analysis of Movies",
          geom_line() +
          scale_x_continuous(
             limits = input$ylim
+         ) +
+         labs(
+            y = "Median Rating",
+            x = "Year"
          )
    )
 
