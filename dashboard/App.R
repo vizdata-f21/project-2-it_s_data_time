@@ -13,62 +13,62 @@ movies_ratings <- left_join(movies, ratings, by = "imdb_title_id")
 
 title_principles <- read_csv("../data/IMDb title_principals.csv")
 
-
+test <- read_csv("../data/test.csv")
 # Country Column
 
 movies_ratings <- movies_ratings %>%
    separate(country, c("country1", "country2"), ", ") %>%
    pivot_longer(starts_with("country"), names_to = "temp",
-                values_to = "country") %>%
-   filter(!is.na(country)) %>%
-   pivot_longer(
-      cols = c(
-         males_0age_avg_vote,
-         males_18age_avg_vote,
-         males_30age_avg_vote,
-         males_45age_avg_vote,
-         males_allages_avg_vote,
-         females_0age_avg_vote,
-         females_18age_avg_vote,
-         females_30age_avg_vote,
-         females_45age_avg_vote,
-         females_allages_avg_vote
-      ),
-      names_to = "age_Cat",
-      values_to = "rating_age"
-   ) %>%
-   mutate(
-      voter_age = case_when(
-         age_Cat == "males_0age_avg_vote" ~ "0-17",
-         age_Cat == "males_18age_avg_vote" ~ "18-29",
-         age_Cat == "males_30age_avg_vote" ~ "30-45",
-         age_Cat == "males_45age_avg_vote" ~ "over_45",
-         age_Cat == "males_allages_avg_vote" ~ "All",
-         age_Cat == "females_0age_avg_vote "~ "0-17",
-         age_Cat == "females_18age_avg_vote" ~ "18-29",
-         age_Cat == "females_30age_avg_vote" ~ "30-45",
-         age_Cat == "females_45age_avg_vote" ~ "over_45",
-         age_Cat == "females_allages_avg_vote" ~ "All"
-      ),
-      voter_gender = case_when(
-         age_Cat == "males_0age_avg_vote" ~ "M",
-         age_Cat == "males_18age_avg_vote" ~ "M",
-         age_Cat == "males_30age_avg_vote" ~ "M",
-         age_Cat == "males_45age_avg_vote" ~ "M",
-         age_Cat == "males_allages_avg_vote" ~ "M",
-         TRUE ~ "F"
-      )
-   )
+                values_to = "country")
+   # filter(!is.na(country)) %>%
+   # pivot_longer(
+   #    cols = c(
+   #       males_0age_avg_vote,
+   #       males_18age_avg_vote,
+   #       males_30age_avg_vote,
+   #       males_45age_avg_vote,
+   #       males_allages_avg_vote,
+   #       females_0age_avg_vote,
+   #       females_18age_avg_vote,
+   #       females_30age_avg_vote,
+   #       females_45age_avg_vote,
+   #       females_allages_avg_vote
+   #    ),
+   #    names_to = "age_Cat",
+   #    values_to = "rating_age"
+   # ) %>%
+   # mutate(
+   #    voter_age = case_when(
+   #       age_Cat == "males_0age_avg_vote" ~ "0-17",
+   #       age_Cat == "males_18age_avg_vote" ~ "18-29",
+   #       age_Cat == "males_30age_avg_vote" ~ "30-45",
+   #       age_Cat == "males_45age_avg_vote" ~ "over_45",
+   #       age_Cat == "males_allages_avg_vote" ~ "All",
+   #       age_Cat == "females_0age_avg_vote "~ "0-17",
+   #       age_Cat == "females_18age_avg_vote" ~ "18-29",
+   #       age_Cat == "females_30age_avg_vote" ~ "30-45",
+   #       age_Cat == "females_45age_avg_vote" ~ "over_45",
+   #       age_Cat == "females_allages_avg_vote" ~ "All"
+   #    ),
+   #    voter_gender = case_when(
+   #       age_Cat == "males_0age_avg_vote" ~ "M",
+   #       age_Cat == "males_18age_avg_vote" ~ "M",
+   #       age_Cat == "males_30age_avg_vote" ~ "M",
+   #       age_Cat == "males_45age_avg_vote" ~ "M",
+   #       age_Cat == "males_allages_avg_vote" ~ "M",
+   #       TRUE ~ "F"
+   #    )
+   # )
 
-ages <- movies_ratings %>%
-   filter(!is.na(voter_age))
-   distinct(voter_age) %>%
+gender <- test %>%
+   filter(!is.na(voter_gender)) %>%
+   distinct(voter_gender) %>%
    pull()
 
 country <- movies_ratings %>%
    filter(!is.na(country)) %>%
    mutate(
-      country_other = fct_lump_min(country,min = 300)
+      country_other = fct_lump_min(country,min = 500)
    ) %>%
    distinct(country_other) %>%
    arrange(country_other) %>%
@@ -86,27 +86,24 @@ ui <- navbarPage(inverse = TRUE, "Analysis of Movies",
                           checkboxGroupInput(
                              inputId = "Country",
                              label = "Select countries",
-                             choices = country
-                             ),
-                          radioButtons(
-                             inputId = "Age",
-                             label = "Choose Age",
-                             choices = ages
-                          )
+                             choices = country,
+                             selected = c("USA","UK")
+                             )
                           ),
                        mainPanel(
                           tabsetPanel(
-                             tabPanel("rename",
-                                      splitLayout(
+                             tabPanel("Ratings by Age and Gender",
                                          plotOutput(
-                                            outputId = "male_duration_rating"
+                                            outputId = "duration_rating"
                                             ),
-                                         plotOutput(
-                                            outputId = "female_duration_rating"
-                                            )
+                                         radioButtons(
+                                            inputId = "Gender",
+                                            label = "Choose Gender",
+                                            choices = gender,
+                                            width = "50%"
                                          )
                                       ),
-                             tabPanel("rename2",
+                             tabPanel("Ratings by Year and Budget",
                                    plotOutput(
                                       outputId = "budget_rating"
                                       ),
@@ -161,15 +158,13 @@ ui <- navbarPage(inverse = TRUE, "Analysis of Movies",
 
     ######################
 
-    # To Do for later:
-      # Pivot Longer Age Breakdowns and Gender Breadowns and make it into a
-      # Selection menu
 
 
     # Duration Plot Data Set
     movie_duration <- reactive({
-       movies_ratings %>%
+       test %>%
           filter(country %in% input$Country) %>%
+          filter(voter_gender == input$Gender) %>%
           mutate(duration_cat = cut(
              duration,
              breaks = c(-Inf, 41, 151, Inf),
@@ -179,13 +174,8 @@ ui <- navbarPage(inverse = TRUE, "Analysis of Movies",
                 "Long Film: >150 mins"
              )
           )) %>%
-          pivot_longer(
-             cols = c(
+          filter(!is.na(voter_gender))
 
-             ),
-             names_to = "Gender",
-             values_to = "Rating"
-          )
 
    })
 
@@ -256,28 +246,35 @@ ui <- navbarPage(inverse = TRUE, "Analysis of Movies",
          )
    )
 
+   # Duration Plot
+   output$duration_rating <- renderPlot({
+      print(unique(movie_duration()$voter_gender))
+      print(unique(input$Gender))
 
-   output$male_duration_rating <- renderPlot(
-      ggplot(data = movie_duration(),
-             aes(y = males_allages_avg_vote,
-                 x = duration_cat)) +
-         geom_boxplot(fill = "blue") +
-         labs(
-            x = "Duration Category",
-            y = "Average rating by Males"
-         )
-   )
-
-   output$female_duration_rating <- renderPlot(
-      ggplot(data = movie_duration(),
-             aes(y = females_allages_avg_vote,
-                 x = duration_cat)) +
+      movie_duration() %>%
+         ggplot(
+            aes(y = avg_vote,
+                x = duration_cat)) +
          geom_boxplot(fill = "red") +
          labs(
             x = "Duration Category",
-            y = "Average rating by Females"
-         )
-   )
+            y = "Average rating by Males"
+         ) +
+         facet_wrap(.~voter_age)
+   })
+
+   # output$female_duration_rating <- renderPlot(
+   #    ggplot(data = movie_duration(),
+   #           aes(y = avg_vote,
+   #               x = duration_cat)) +
+   #       geom_point(fill = "red") +
+   #       labs(
+   #          x = "Duration Category",
+   #          y = "Average rating by Females"
+   #       ) +
+   #       geom_jitter()+
+   #       facet_wrap(.~voter_age)
+   # )
 
    output$directors <- render_gt({
       director_rating() %>%

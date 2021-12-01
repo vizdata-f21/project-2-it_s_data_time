@@ -1,3 +1,5 @@
+library(tidyverse)
+
 ratings <- read_csv("data/IMDbratings.csv")
 
 movies <- read_csv("data/IMDb movies.csv") %>%
@@ -5,7 +7,13 @@ movies <- read_csv("data/IMDb movies.csv") %>%
 
 movies_ratings <- left_join(movies, ratings, by = "imdb_title_id")
 
-movies_ratings %>%
+title_principles <- read_csv("data/IMDb title_principals.csv")
+
+movies_ratings <- movies_ratings %>%
+  separate(country, c("country1", "country2"), ", ") %>%
+  pivot_longer(starts_with("country"), names_to = "temp",
+               values_to = "country") %>%
+  filter(!is.na(country)) %>%
   pivot_longer(
     cols = c(
       males_0age_avg_vote,
@@ -41,11 +49,15 @@ movies_ratings %>%
       age_Cat == "males_30age_avg_vote" ~ "M",
       age_Cat == "males_45age_avg_vote" ~ "M",
       age_Cat == "males_allages_avg_vote" ~ "M",
-      TRUE ~ "F"
+      age_Cat == "females_0age_avg_vote" ~ "F",
+      age_Cat == "females_18age_avg_vote" ~ "F",
+      age_Cat == "females_30age_avg_vote" ~ "F",
+      age_Cat == "females_45age_avg_vote" ~ "F",
+      age_Cat == "females_allages_avg_vote" ~ "F"
     )
   ) %>%
-  filter(!is.na(voter_age,voter_gender))
+  select(voter_age,voter_gender,country,duration,avg_vote,budget,median_vote,
+         director,mean_vote,year)
 
-  select(age_Cat,rating_age,voter_age,voter_gender)
 
-glimpse(movies_ratings)
+write_csv(movies_ratings,path = "data/test.csv")
