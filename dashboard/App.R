@@ -2,6 +2,8 @@
 library(shiny)
 library(tidyverse)
 library(scales)
+library(DT)
+
 
 
 # Load data ---------------------------------------------------------
@@ -71,14 +73,14 @@ connections <- function(centurysel, initialnode, name= "Spike Lee", connection){
 
 # Shiny UI
 ui <- navbarPage(
-  inverse = TRUE, "Analysis of Movies",
+  inverse = TRUE, "I ❤️ Movies",
   # Page 1.
-  tabPanel("Genres or Krystals Tab", includeCSS("css/styles.css"),
+  tabPanel("Guess the Genre", includeCSS("css/styles.css"),
            p("lol our changes are on individual branches and not merged yet.
              check out the peoples tab for a little progress ")),
-  tabPanel("Scores Tab"),
+  tabPanel("Everyone's A Critic"),
   tabPanel(
-    "Peoples tab.",
+    "A Net of Stars ",
     fluidPage(sidebarLayout(
       position = "right",
       sidebarPanel(
@@ -106,8 +108,15 @@ ui <- navbarPage(
       mainPanel(
         h1(strong(em("\"Filmmaking is a chance to live many lifetimes.\""), "- Robert Altman")),
         h3(textOutput("timeperiod")),
+        br(),
         plotOutput("NetworkPlot"),
-        h3(textOutput("analyzeConnection"))
+        br(),br(),  br(),br(), br(),br(),
+        br(),br(), br(),br(),
+        h4(textOutput("analyzeConnection")),
+        br(),br(),
+        br(),
+        dataTableOutput("connectTable")
+
       )
     ))
   )
@@ -157,7 +166,7 @@ server <- function(input, output) {
         textInput("name", "Writer name contains (e.g., Tyler Perry)"),
         radioButtons("connections",
                            "What connections do you want to visualize:",
-                           choices = c("Directors" = "directors", "Actors" = "actors"),
+                           choices = c("Directors" = "director", "Actors" = "actors"),
                            selected = "actors",
                            inline = TRUE
         ),
@@ -174,7 +183,7 @@ server <- function(input, output) {
         list(textInput("name", "Actor name contains (e.g., Brad Pitt)"),
              radioButtons("connections",
                                 "What connections do you want to visualize:",
-                                choices = c("Writers" = "writer", "Directors" = "directors"),
+                                choices = c("Writers" = "writer", "Directors" = "director"),
                                 selected = "writer",
                                 inline = TRUE
              ),
@@ -210,11 +219,17 @@ server <- function(input, output) {
       scale_color_viridis(discrete = TRUE)+
       labs(title= paste("Connection from", input$name, "to", input$connections), caption= "Size of Edge corresponds to frequency of the connnection")
 
-  })
+  },  height = 600, width = 800)
 
+  output$analyzeConnection <-renderText(
+   paste0("Wow, it looks like  ", input$name, "'s", " favorite", input$connections, " is ", spatialGraph()[1,3])
+  )
 
-  output$analyzeConnection <-renderDataTable(
-    spatialGraph()
+  output$connectTable <-DT::renderDataTable(
+    spatialGraph()%>%
+      rename(Name = split)%>%
+      rename("Number of Appearances" = weight)%>%
+      select(-node)
   )
 
 
