@@ -3,7 +3,7 @@ title: "peopleeda"
 output: html_document
 editor_options: 
   chunk_output_type: console
----
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -16,8 +16,6 @@ library(tidytext)
 library(igraph)
 library(tidygraph)
 library(ggraph)
-
-#library(network)
 ```
 
 
@@ -99,4 +97,5 @@ ggraph(bigram_graph,  layout = "kk") +
   labs(title= "Connection from Producer to Actors", caption= "Size of Edge corresponds to frequency of the connnection")
 
 ```
+
 
