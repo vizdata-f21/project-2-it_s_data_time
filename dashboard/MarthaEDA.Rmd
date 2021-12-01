@@ -13,6 +13,11 @@ library(dplyr)
 library(stringr)
 library(janitor)
 library(tidytext)
+library(igraph)
+library(tidygraph)
+library(ggraph)
+
+#library(network)
 ```
 
 
@@ -45,12 +50,17 @@ A<-people%>%
 
 
 
-unnest_tokens(A, split, actors, token = str_split, pattern = ",")%>%
+actorsconnected<-unnest_tokens(A, split, actors, token = str_split, pattern = ",")%>%
    group_by(split)%>%
   count()%>%
   arrange(desc(n))%>%
-  head(20)
+  head(10)
 
+actorsconnected$node = replicate(10, "Spike Lee")
+
+actorsconnected<-actorsconnected%>%
+  rename(weight = n)%>%
+  select(node,split, weight)
 
 B<-people%>%
   filter(director == "Spike Lee")%>%
@@ -58,11 +68,30 @@ B<-people%>%
 
 
 
-unnest_tokens(B, split, writer, token = str_split, pattern = ",")%>%
+writorsconnected<-unnest_tokens(B, split, writer, token = str_split, pattern = ",")%>%
    group_by(split)%>%
   count()%>%
   arrange(desc(n))%>%
   head(20)
 
+```
+
+
+```{r}
+
+bigram_graph<-actorsconnected%>%
+  graph_from_data_frame(directed = TRUE)
+
+
+bigram_graph
+
+is_weighted(bigram_graph)
+
+
+ggraph(bigram_graph) +
+  geom_edge_link() +
+  geom_node_point() 
+
+plot(bigram_graph)
 ```
 
