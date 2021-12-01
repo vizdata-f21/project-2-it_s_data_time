@@ -113,7 +113,7 @@ ui <- navbarPage(
                         min = 1950,
                         value = c(1950, 2020),
                         max = 2020,
-                        width = "100%",
+                        width = "70%",
                         step = 5,
                         sep = ""
                      )
@@ -255,19 +255,7 @@ server <- function(input, output, session) {
          facet_wrap(. ~ voter_age)
    })
 
-   # output$female_duration_rating <- renderPlot(
-   #    ggplot(data = movie_duration(),
-   #           aes(y = avg_vote,
-   #               x = duration_cat)) +
-   #       geom_point(fill = "red") +
-   #       labs(
-   #          x = "Duration Category",
-   #          y = "Average rating by Females"
-   #       ) +
-   #       geom_jitter()+
-   #       facet_wrap(.~voter_age)
-   # )
-
+   # Directors table
    output$directors <- render_gt({
       director_rating() %>%
          gt() %>%
@@ -285,13 +273,6 @@ server <- function(input, output, session) {
          cols_align(align = "left", columns = where(is.character))
    })
 
-   # output$datatb<- DT::renderDataTable({
-   #   Remind Shiny it is a reactive objective
-   #   DO NOT FORGET THIS
-   #   movie_dt()
-   # })
-
-
 
    # Year Plot
    output$yr_plot <- renderPlot(
@@ -308,11 +289,12 @@ server <- function(input, output, session) {
               )
    )
 
+   # Tooltip information
    output$hover_info <- renderPrint({
       if (!is.null(input$plot_hover)) {
          hover = input$plot_hover
          dist = sqrt((hover$x - movie_yr_ratings()$year) ^ 2 + (hover$y -
-                                                                   movie_yr_ratings()$med) ^ 2)
+                                                   movie_yr_ratings()$med) ^ 2)
          cat("Total movies in ")
          cat(movie_yr_ratings()$year[which.min(dist)])
          cat(": ")
@@ -334,6 +316,10 @@ observeEvent(input$year, {
    )
 })
 
+# Motivation
+# Purpose
+   # Overcoming technical challenges (Not too much)
+# Audience
 
 
 # Run application.
