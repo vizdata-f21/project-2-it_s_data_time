@@ -9,6 +9,65 @@ library(scales)
 ratings <- read_csv("../data/IMDbratings.csv")
 movies <- read_csv("../data/IMDb movies.csv")
 title_principles <- read_csv("../data/IMDb title_principals.csv")
+movies <- movies%>%
+  mutate(century = case_when(
+    year >=2000 ~ "1",
+    year>= 900 & year <2000 ~ "0"
+  ))
+
+
+## Function for People Tab Data Filtering.
+
+connections <- function(centurysel, initialnode, name= "Spike Lee", connection){
+  if (initialnode == "directors"){
+    movies%>%
+      filter(century == centurysel)%>%
+      filter(str_detect(director,  name))%>%
+      select(connection) -> A
+    top10<-unnest_tokens(A, split, names(A), token = str_split, pattern = ",")%>%
+      group_by(split)%>%
+      count()%>%
+      arrange(desc(n))%>%
+      head(10)
+    top10$node = replicate(10, name)
+    top10<-top10%>%
+      rename(weight = n)
+    top10<-top10%>%
+      select(node,split, weight) }
+  else {
+    if (initialnode == "writer") {
+      movies%>%
+        filter(century == centurysel)%>%
+        filter(str_detect(writer,  name))%>%
+        select(connection) -> A
+      top10<-unnest_tokens(A, split, names(A), token = str_split, pattern = ",")%>%
+        group_by(split)%>%
+        count()%>%
+        arrange(desc(n))%>%
+        head(10)
+      top10$node = replicate(10, name)
+      top10<-top10%>%
+        rename(weight = n)
+      top10<-top10%>%
+        select(node,split, weight) }
+    else {
+      movies%>%
+        filter(century == centurysel)%>%
+        filter(str_detect(actors,  name))%>%
+        select(connection) -> A
+      top10<-unnest_tokens(A, split, names(A), token = str_split, pattern = ",")%>%
+        group_by(split)%>%
+        count()%>%
+        arrange(desc(n))%>%
+        head(10)
+      top10$node = replicate(10, name)
+      top10<-top10%>%
+        rename(weight = n)
+      top10<-top10%>%
+        select(node,split, weight)}}
+  return(top10)
+  }
+
 
 # Shiny UI
 ui <- navbarPage(
@@ -35,9 +94,8 @@ ui <- navbarPage(
         wellPanel(
           style = "background: #2D708E; color: white",
           selectInput("start", "Select initial node of connection: ",
-            choices = c("Directors" = "directors", "Writers" = "writers", "Actors" = "actors"),
-            selected = "directors"
-          ),
+            choices = c("Directors" = "directors", "Writers" = "writer", "Actors" = "actors"),
+            selected = "directors")
         ),
         wellPanel(
           style = "background: #2D708E; color: white",
@@ -47,7 +105,9 @@ ui <- navbarPage(
       ),
       mainPanel(
         h1(strong(em("\"Filmmaking is a chance to live many lifetimes.\""), "- Robert Altman")),
-        textOutput("timeperiod")
+        h3(textOutput("timeperiod")),
+        plotOutput("NetworkPlot"),
+        h3(textOutput("analyzeConnection"))
       )
     ))
   )
@@ -75,10 +135,10 @@ server <- function(input, output) {
   output$furtherOptions <- renderUI({
     if (input$start == "directors") {
       list(
-      textInput("drector", "Director name contains (e.g., Spike Lee)"),
-      checkboxGroupInput("connections",
+      textInput("name", "Director name contains (e.g., Spike Lee)"),
+      radioButtons("connections",
         "What connections do you want to visualize:",
-        choices = c("Writers" = "writers", "Actors" = "actors"),
+        choices = c("Writers" = "writer", "Actors" = "actors"),
         selected = "actors",
         inline = TRUE
       ),
@@ -88,13 +148,14 @@ server <- function(input, output) {
       } else {
         sliderInput("year", "Year released", 1900,  1999, value = c(1900, 1999),
                     sep = "")
-      }
+      },
+      actionButton("do", "Generate Plot")
       )
     } else {
-      if (input$start == "writers") {
+      if (input$start == "writer") {
         list(
-        textInput("writers", "Write name contains (e.g., Tyler Perry)"),
-        checkboxGroupInput("connections",
+        textInput("name", "Writer name contains (e.g., Tyler Perry)"),
+        radioButtons("connections",
                            "What connections do you want to visualize:",
                            choices = c("Directors" = "directors", "Actors" = "actors"),
                            selected = "actors",
@@ -106,14 +167,15 @@ server <- function(input, output) {
         } else {
           sliderInput("year", "Year released", 1900,  1999, value = c(1900, 1999),
                       sep = "")
-        }
+        },
+        actionButton("do", "Generate Plot")
         )
       } else {
-        list(textInput("actors", "Actor name contains (e.g., Brad Pitt)"),
-             checkboxGroupInput("connections",
+        list(textInput("name", "Actor name contains (e.g., Brad Pitt)"),
+             radioButtons("connections",
                                 "What connections do you want to visualize:",
-                                choices = c("Writers" = "writers", "Directors" = "directors"),
-                                selected = "actors",
+                                choices = c("Writers" = "writer", "Directors" = "directors"),
+                                selected = "writer",
                                 inline = TRUE
              ),
              if (input$century == "1") {
@@ -122,12 +184,41 @@ server <- function(input, output) {
              } else {
                sliderInput("year", "Year released", 1900,  1999, value = c(1900, 1999),
                            sep = "")
-             }
-
+             },
+             actionButton("do", "Generate Plot")
              )
       }
     }
   })
+
+  spatialGraph <-eventReactive(input$do, {
+   df = connections(input$century, input$start, input$name, input$connections)
+  })
+
+
+  output$NetworkPlot <- renderPlot({
+    bigram_graph<-spatialGraph()%>%
+      graph_from_data_frame(directed = TRUE)
+
+    ggraph(bigram_graph,  layout = "kk") +
+      geom_edge_link(alpha = .5, color = "grey80",
+                     aes(width = weight), show.legend = FALSE) +
+      geom_node_point(size = 5, aes(color = as.factor(name)), show.legend = FALSE) +
+      geom_node_text(aes(label = name), repel=TRUE)+
+      theme_graph()+
+      scale_edge_width(range = c(1, 10))+
+      scale_color_viridis(discrete = TRUE)+
+      labs(title= paste("Connection from", input$name, "to", input$connections), caption= "Size of Edge corresponds to frequency of the connnection")
+
+  })
+
+
+  output$analyzeConnection <-renderDataTable(
+    spatialGraph()
+  )
+
+
+
 }
 
 

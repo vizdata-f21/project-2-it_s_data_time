@@ -43,12 +43,12 @@ people <-movies%>%
 [ ] Script for filtering based on director,actor or writer can be a function call. 
 ```{r}
 A<-people%>%
-  filter(director == "Spike Lee")%>%
+  filter(str_detect(director, "Paul Wegener"))%>%
   select(actors)
 
+names(A)
 
-
-actors<-unnest_tokens(A, split, actors, token = str_split, pattern = ",")%>%
+actors<-unnest_tokens(A, split, names(A), token = str_split, pattern = ",")%>%
    group_by(split)%>%
   count()%>%
   arrange(desc(n))%>%
@@ -84,18 +84,102 @@ bigram_graph<-actorsconnected%>%
   graph_from_data_frame(directed = TRUE)
 
 
+name<-"spike lee"
 
 
 ggraph(bigram_graph,  layout = "kk") +
   geom_edge_link(alpha = .5, color = "grey80",
                  aes(width = weight), show.legend = FALSE) +
-  geom_node_point(size = 3, aes(color = as.factor(name)), show.legend = FALSE) +
+  geom_node_point(size =5, aes(color = as.factor(name)), show.legend = FALSE) +
    geom_node_text(aes(label = name), repel=TRUE)+
   theme_graph()+
     scale_edge_width(range = c(1, 10))+ 
   scale_color_viridis(discrete = TRUE)+
-  labs(title= "Connection from Producer to Actors", caption= "Size of Edge corresponds to frequency of the connnection")
+  labs(title=  paste("Connection from", name, "to Actors"), caption= "Size of Edge corresponds to frequency of the connnection")
 
+
+
+connections <- function(centurysel, initialnode, name, connection) { 
+if (initialnode == "directors"){
+   people%>%
+   filter(century == centurysel)%>%
+   filter(str_detect(director,  name))%>%
+   select(connection) -> A
+   top10<-unnest_tokens(A, split, names(A), token = str_split, pattern = ",")%>%
+   group_by(split)%>%
+  count()%>%
+  arrange(desc(n))%>%
+  head(10)
+  top10$node = replicate(10, name)
+  top10<-top10%>%
+  rename(weight = n)
+  top10<-top10%>%
+  select(node,split, weight) }
+  else {
+  if (initialnode == "writer") {
+    people%>%
+   filter(century == centurysel)%>%
+   filter(str_detect(writer,  name))%>%
+   select(connection) -> A
+   top10<-unnest_tokens(A, split, names(A), token = str_split, pattern = ",")%>%
+   group_by(split)%>%
+  count()%>%
+  arrange(desc(n))%>%
+  head(10)
+  top10$node = replicate(10, name)
+  top10<-top10%>%
+  rename(weight = n)
+  top10<-top10%>%
+  select(node,split, weight) }
+  else {
+  people%>%
+   filter(century == centurysel)%>%
+   filter(str_detect(actors,  name))%>%
+   select(connection) -> A
+   top10<-unnest_tokens(A, split, names(A), token = str_split, pattern = ",")%>%
+   group_by(split)%>%
+  count()%>%
+  arrange(desc(n))%>%
+  head(10)
+  top10$node = replicate(10, name)
+  top10<-top10%>%
+  rename(weight = n)
+  top10<-top10%>%
+  select(node,split, weight)}}
+  return(top10)
+  }
+  
+  
+  
+  connections("0", "actors", "Spike Lee", "writer")
+  
+    connections("0", "directors", "Paul Wegener", "actors")
+    
+   
+  
+  
+  
+  A <- people%>%
+  filter(century == centurysel)%>%
+  filter(director ==  name)%>%
+  select(connection)
+  
+  return(A)
+  
+  
+  top10<-unnest_tokens(A, split, names(A), token = str_split, pattern = ",")%>%
+   group_by(split)%>%
+  count()%>%
+  arrange(desc(n))%>%
+  head(10)
+
+top10$node = replicate(10, name)
+
+top10<-top10%>%
+  rename(weight = n)
+
+
+top10<-top10%>%
+  select(node,split, weight) 
+  
 ```
-
-
