@@ -85,12 +85,13 @@ bigram_graph<-actorsconnected%>%
 
 bigram_graph
 
-is_weighted(bigram_graph)
 
 
-ggraph(bigram_graph) +
+ggraph(bigram_graph,  layout = "kk") +
   geom_edge_link() +
-  geom_node_point() 
+  geom_node_point(colour = "black") +
+   geom_node_text(aes(label = name), repel=TRUE)+
+  theme_graph()
 
 plot(bigram_graph)
 ```
