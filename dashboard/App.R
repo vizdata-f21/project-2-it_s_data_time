@@ -2,8 +2,9 @@
 library(shiny)
 library(tidyverse)
 library(gt)
-# Load data ---------------------------------------------------------
 
+
+# Load data ---------------------------------------------------------
 ratings <- read_csv("../data/IMDbratings.csv")
 
 movies <- read_csv("../data/IMDb movies.csv") %>%
@@ -68,7 +69,7 @@ gender <- test %>%
 
 country <- movies_ratings %>%
    filter(!is.na(country)) %>%
-   mutate(country_other = fct_lump_min(country, min = 500)) %>%
+   mutate(country_other = fct_lump_min(country, min = 1000)) %>%
    distinct(country_other) %>%
    arrange(country_other) %>%
    pull()
@@ -104,6 +105,16 @@ ui <- navbarPage(
                   tabPanel(
                      "Ratings by Year and Budget",
                      plotOutput(outputId = "budget_rating"),
+                     splitLayout(radioButtons(
+                        inputId = "Budget",
+                        label = "Choose bar graph type",
+                        choices = c("stack","dodge")
+                     ),
+                     radioButtons(
+                        inputId = "Budget_Cat",
+                        label = "Choose rating metric",
+                        choices = c("Median Rating","Rating Category")
+                     )),
                      plotOutput(outputId = "yr_plot",
                                 hover = hoverOpts(id = "plot_hover")),
                      verbatimTextOutput("hover_info"),
@@ -192,7 +203,9 @@ server <- function(input, output, session) {
                median_vote,
                breaks = c(0, 4, 7, 11),
                labels = c("0-3", "4-7", "8-10")
-            )
+            ),
+            ,
+            median_vote_r = round(median_vote)
          )
    })
 
@@ -227,20 +240,37 @@ server <- function(input, output, session) {
 ################################################################################
 
    # Budget rating plot
-   output$budget_rating <- renderPlot(
-      ggplot(data = movie_budget(),
-             aes(x = rating_cat,
-                 fill = budget_cat)) +
-         geom_bar(position = "dodge") +
-         labs(fill = "Budget category",
-              x = "Rating Category",
-              y = "Count",
-              title = "Mean IMDb rating",
-              subtitle = "By Budget categories")
-   )
+   output$budget_rating <- renderPlot({
+
+      if(input$Budget_Cat == "Median Rating"){
+         ggplot(data = movie_budget(),
+                aes(x = median_vote_r,
+                    fill = budget_cat)) +
+            geom_bar(position = input$Budget) +
+            labs(fill = "Budget category",
+                 x = "Rating",
+                 y = "Count",
+                 title = "Median IMDb rating",
+                 subtitle = "By Budget categories") +
+            scale_x_continuous(breaks = c(1:10))
+      }else{
+         ggplot(data = movie_budget(),
+                aes(x = rating_cat,
+                    fill = budget_cat)) +
+            geom_bar(position = input$Budget) +
+            labs(fill = "Budget category",
+                 x = "Rating Category",
+                 y = "Count",
+                 title = "Median IMDb rating",
+                 subtitle = "By Budget categories")
+      }
+
+
+   })
 
    # Duration Plot
    output$duration_rating <- renderPlot({
+
       print(unique(movie_duration()$voter_gender))
       print(unique(input$Gender))
 
@@ -305,7 +335,7 @@ server <- function(input, output, session) {
 
 }
 
-#year slider
+# Year slider
 observeEvent(input$year, {
    updateSliderInput(
       inputId = "ylim",
