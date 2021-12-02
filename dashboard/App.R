@@ -25,7 +25,7 @@ movies <- movies %>%
                               year >= 900 & year < 2000 ~ "0"))
 
 
-test <- read_csv("../data/test.csv")
+age_gender_data <- read_csv("../data/age_gender_data.csv")
 # Country Column
 
 movies_ratings <- movies_ratings %>%
@@ -34,11 +34,15 @@ movies_ratings <- movies_ratings %>%
                 names_to = "temp",
                 values_to = "country")
 
+<<<<<<< HEAD
             #Warning appears for observations with more than 2 countries.
             #Did not count countries listed in 3rd position and beyond.
 
 
 gender <- test %>%
+=======
+gender <- age_gender_data %>%
+>>>>>>> 8dc78a90b6587d750cec5a1b9876dabaf860c449
    filter(!is.na(voter_gender)) %>%
    distinct(voter_gender) %>%
    pull()
@@ -168,20 +172,6 @@ ui <- navbarPage(
    "Let's Make A M💚VIE",
    # Page 1.
    tabPanel(
-      "Guess the Genre",
-      includeCSS("css/styles.css"),
-      tabItem(
-         tabName = "genre",
-         h2("Explore movie genres"),
-         selectInput(inputId = "genre",
-                     label = "Choose Movie Genre",
-                     list("Action", "Adventure","Animation","Biography","Comedy",
-                          "Crime", "Drama", "Fantasy", "History", "Horror", "Mystery",
-                          "Musical", "Romance", "Sci-Fi", "Thriller", "Western")),
-         fluidRow(plotOutput("bar_plot"), plotOutput("map"))
-      )
-   ),
-   tabPanel(
       "Everyone's A Critic",
       sidebarLayout(sidebarPanel(
         style = "background: black",
@@ -219,7 +209,7 @@ ui <- navbarPage(
                   radioButtons(
                      inputId = "Budget",
                      label = "Choose bar graph type",
-                     choices = c("stack", "dodge")
+                     choices = c("fill", "dodge")
                   ),
                   radioButtons(
                      inputId = "Budget_Cat",
@@ -321,7 +311,21 @@ ui <- navbarPage(
                      dataTableOutput("connectTable")
                   )
                )
-            ))
+            )),
+   tabPanel(
+      "Guess the Genre",
+      includeCSS("css/styles.css"),
+      tabItem(
+         tabName = "genre",
+         h2("Explore movie genres"),
+         selectInput(inputId = "genre",
+                     label = "Choose Movie Genre",
+                     list("Action", "Adventure","Animation","Biography","Comedy",
+                          "Crime", "Drama", "Fantasy", "History", "Horror", "Mystery",
+                          "Musical", "Romance", "Sci-Fi", "Thriller", "Western")),
+         fluidRow(plotOutput("bar_plot"), plotOutput("map"))
+      )
+   )
 )
 
 # SHINY SERVER
@@ -331,7 +335,7 @@ server <- function(input, output, session) {
    ######################
    # Duration Plot Data Set
    movie_duration <- reactive({
-      test %>%
+      age_gender_data %>%
          filter(country %in% input$Country) %>%
          filter(voter_gender == input$Gender) %>%
          mutate(duration_cat = cut(
@@ -408,6 +412,9 @@ server <- function(input, output, session) {
 
    # Budget rating plot
    output$budget_rating <- renderPlot({
+
+      y_label = ifelse(input$Budget == "fill","Prop","Count")
+
       if (input$Budget_Cat == "Median Rating") {
          ggplot(data = movie_budget(),
                 aes(x = median_vote_r,
@@ -416,7 +423,7 @@ server <- function(input, output, session) {
             labs(
                fill = "Budget category",
                x = "Rating",
-               y = "Count",
+               y = y_label,
                title = "Median IMDb rating",
                subtitle = "By Budget categories"
             ) +
@@ -431,7 +438,7 @@ server <- function(input, output, session) {
             labs(
                fill = "Budget category",
                x = "Rating Category",
-               y = "Count",
+               y = y_label,
                title = "Median IMDb rating",
                subtitle = "By Budget categories"
             ) +
