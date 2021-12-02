@@ -34,6 +34,10 @@ movies_ratings <- movies_ratings %>%
                 names_to = "temp",
                 values_to = "country")
 
+            #Warning appears for observations with more than 2 countries.
+            #Did not count countries listed in 3rd position and beyond.
+
+
 gender <- test %>%
    filter(!is.na(voter_gender)) %>%
    distinct(voter_gender) %>%

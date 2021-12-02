@@ -11,7 +11,29 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r}
 
+ratings <- read_csv("../data/IMDbratings.csv")
+
+movies <- read_csv("../data/IMDb movies.csv") %>%
+   filter(year >= 1950)
+
+movies_ratings <- left_join(movies, ratings, by = "imdb_title_id")
+
+title_principles <- read_csv("../data/IMDb title_principals.csv")
+movies <- movies %>%
+   mutate(century = case_when(year >= 2000 ~ "1",
+                              year >= 900 & year < 2000 ~ "0"))
+
+
 test <- read_csv("../data/test.csv")
+# Country Column
+
+movies_ratings2 <- movies_ratings %>%
+   separate(country, c("country1", "country2", "country3",
+                       "country4", "country5", "country6"), ", ") %>%
+   pivot_longer(starts_with("country"),
+                names_to = "temp",
+                values_to = "country") 
+
 
 
 ```
