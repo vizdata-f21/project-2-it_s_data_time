@@ -126,9 +126,15 @@ ui <- navbarPage(
    tabPanel(
       "Guess the Genre",
       includeCSS("css/styles.css"),
-      p(
-         "lol our changes are on individual branches and not merged yet.
-             check out the peoples tab for a little progress "
+      tabItem(
+         tabName = "genre",
+         h2("Explore movie genres"),
+         selectInput(inputId = "genre",
+                     label = "Choose Movie Genre",
+                     list("Action", "Adventure","Animation","Biography","Comedy",
+                          "Crime", "Drama", "Fantasy", "History", "Horror", "Mystery",
+                          "Musical", "Romance", "Sci-Fi", "Thriller", "Western")),
+         fluidRow(plotOutput("bar_plot"), plotOutput("map"))
       )
    ),
    tabPanel(
@@ -695,30 +701,6 @@ genre_data <- genre_data %>%
 
 # create genre tab
 
-ui <- dashboardPage(
-   skin = "red",
-   dashboardHeader(title = "IMDb Movies"),
-   dashboardSidebar(
-      sidebarSearchForm(label = "Search...", "searchText", "searchButton"),
-      sidebarMenu(
-         menuItem("Genre", tabName = "genre", icon = icon("grip-horizontal"))
-      )
-
-   ),
-   dashboardBody(
-      tabItem(
-         tabName = "genre",
-         h2("Explore movie genres"),
-         selectInput(inputId = "genre",
-                     label = "Choose Movie Genre",
-                     list("Action", "Adventure","Animation","Biography","Comedy",
-                          "Crime", "Drama", "Fantasy", "History", "Horror", "Mystery",
-                          "Musical", "Romance", "Sci-Fi", "Thriller", "Western")),
-         fluidRow(plotOutput("bar_plot"), plotOutput("map"))
-      )
-   )
-)
-
 
 server <- function (input, output) {
    # explore how the average ratings and the total number of movies made within each genre change over the years
@@ -734,6 +716,7 @@ server <- function (input, output) {
                                high = "red4", low = "darkgoldenrod1") +
          scale_y_continuous(name = "Count") +
          scale_x_continuous(name = "Year", limits = c(1900, 2020), breaks = seq(from = 1900, to = 2020, by = 10)) +
+         scale_fill_viridis() +
          theme(
             legend.position = "bottom",
             panel.grid = element_blank(),
@@ -760,6 +743,7 @@ server <- function (input, output) {
          coord_fixed(1.3) +
          geom_polygon(aes(fill = count)) +
          scale_fill_continuous(trans = "log10", high = "red4", low = "darkgoldenrod1") +
+         scale_fill_viridis() +
          theme(
             plot.title = element_text(hjust = 0.1),
             plot.caption = element_text(hjust = 1),
