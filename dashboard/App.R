@@ -245,8 +245,8 @@ ui <- navbarPage(
                      )),
                      h3(textOutput("timeperiod")),
                      br(),
-                     #plotOutput("NetworkPlot"),
-                     visNetworkOutput("vizNetWork"),
+                     plotOutput("NetworkPlot"),
+                    # visNetworkOutput("vizNetWork", width = 800, height = 600),
                      br(),
                      br(),
                      br(),
@@ -595,12 +595,11 @@ server <- function(input, output, session) {
 
       ggraph(bigram_graph, layout = "kk") +
          geom_edge_link(
-            alpha = .5,
             color = "grey80",
-            aes(width = weight),
+            aes(width = weight*5),
             show.legend = FALSE
          ) +
-         geom_node_point(size = 5,
+         geom_node_point(size = c(0.5, V(bigram_graph)$weight) * 20,
                          aes(color = as.factor(name)),
                          show.legend = FALSE) +
          geom_node_text(aes(label = name), repel = TRUE) +
@@ -615,18 +614,16 @@ server <- function(input, output, session) {
    height = 600,
    width = 800)
 
-   output$vizNetWork <- renderVisNetwork (
-     {
-       bigram_graph <- spatialGraph() %>%
-         graph_from_data_frame(directed = TRUE)
-       col = c("#fde725", "#b5de2b", "#6ece58", "#35b779",
-               "#1f9e89", "#26828e", "#31688e", "#3e4989",
-               "#482878", "#440154")
-       bigram_graph<-set.vertex.attribute(bigram_graph, name = "group",value = col)
-       visIgraph(bigram_graph) %>%
-         visInteraction(hover = TRUE, tooltipDelay = 0)
-     }
-   )
+  # output$vizNetWork <- renderVisNetwork (
+  #   {
+ #      bigram_graph <- spatialGraph() %>%
+#         graph_from_data_frame(directed = TRUE)
+ #    V(bigram_graph)$color <- (viridis_pal()(11))
+ #    V(bigram_graph)$size  <- spatialGraph()$weight * 5
+#     visIgraph(bigram_graph, type= "full") %>%
+ #        visInteraction(hover = TRUE, tooltipDelay = 0)
+
+#     })
 
    output$analyzeConnection <- renderText(
       paste0(

@@ -6,7 +6,6 @@ editor_options:
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(forcats)
 library(dplyr)
@@ -16,6 +15,8 @@ library(tidytext)
 library(igraph)
 library(tidygraph)
 library(ggraph)
+library(visNetwork)
+library(gganimate)
 ```
 
 
@@ -83,19 +84,30 @@ writorsconnected<-unnest_tokens(B, split, writer, token = str_split, pattern = "
 bigram_graph<-actorsconnected%>%
   graph_from_data_frame(directed = TRUE)
 
-
+actorsconnected
 name<-"spike lee"
 
+V(bigram_graph)
+c(2, actorsconnected$weight)*5
 
 ggraph(bigram_graph,  layout = "kk") +
-  geom_edge_link(alpha = .5, color = "grey80",
-                 aes(width = weight), show.legend = FALSE) +
-  geom_node_point(size =5, aes(color = as.factor(name)), show.legend = FALSE) +
+  geom_edge_link(color = "grey80",
+                 aes(width = weight*5), show.legend = FALSE) +
+  geom_node_point(size = V(bigram_graph)$weight * 5,
+                         aes(color = as.factor(name)),
+                         show.legend = FALSE)+
    geom_node_text(aes(label = name), repel=TRUE)+
   theme_graph()+
-    scale_edge_width(range = c(1, 10))+ 
   scale_color_viridis(discrete = TRUE)+
-  labs(title=  paste("Connection from", name, "to Actors"), caption= "Size of Edge corresponds to frequency of the connnection")
+  transition_components(frame)
+  
+  
+  V(bigram_graph)$color <- (viridis_pal()(11))
+  V(bigram_graph)$size  <- 1:11 *5
+
+    visIgraph(bigram_graph, type= "full") %>%
+         visInteraction(hover = TRUE, tooltipDelay = 0)
+  
 
 
 
