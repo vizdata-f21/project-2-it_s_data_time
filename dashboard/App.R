@@ -7,6 +7,8 @@ library(DT)
 library(igraph)
 library(tidytext)
 library(ggraph)
+library(visNetwork)
+
 # Load data ---------------------------------------------------------
 ratings <- read_csv("../data/IMDbratings.csv")
 
@@ -243,7 +245,8 @@ ui <- navbarPage(
                      )),
                      h3(textOutput("timeperiod")),
                      br(),
-                     plotOutput("NetworkPlot"),
+                     #plotOutput("NetworkPlot"),
+                     visNetworkOutput("vizNetWork"),
                      br(),
                      br(),
                      br(),
@@ -283,7 +286,8 @@ server <- function(input, output, session) {
                "Long Film: >150 mins"
             )
          )) %>%
-         filter(!is.na(voter_gender))
+         filter(!is.na(voter_gender))%>%
+        filter(!is.na(voter_age))
    })
 
    # Year Rating Data Set
@@ -391,7 +395,7 @@ server <- function(input, output, session) {
       movie_duration() %>%
          ggplot(aes(y = avg_vote,
                     x = duration_cat)) +
-         geom_boxplot(fill = "red") +
+         geom_violin(fill = "#29AF7F") +
          labs(
             x = "Duration Category",
             y = "Average rating by Males",
@@ -610,6 +614,19 @@ server <- function(input, output, session) {
    },
    height = 600,
    width = 800)
+
+   output$vizNetWork <- renderVisNetwork (
+     {
+       bigram_graph <- spatialGraph() %>%
+         graph_from_data_frame(directed = TRUE)
+       col = c("#fde725", "#b5de2b", "#6ece58", "#35b779",
+               "#1f9e89", "#26828e", "#31688e", "#3e4989",
+               "#482878", "#440154")
+       bigram_graph<-set.vertex.attribute(bigram_graph, name = "group",value = col)
+       visIgraph(bigram_graph) %>%
+         visInteraction(hover = TRUE, tooltipDelay = 0)
+     }
+   )
 
    output$analyzeConnection <- renderText(
       paste0(

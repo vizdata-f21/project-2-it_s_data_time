@@ -183,3 +183,37 @@ top10<-top10%>%
   select(node,split, weight) 
   
 ```
+
+
+## Debugging the first plot.
+
+
+```{r}
+test <- read_csv("../data/test.csv")
+
+ test %>%
+         filter(country %in% c("USA", "UK")) %>%
+         filter(voter_gender == "F") %>%
+         mutate(duration_cat = cut(
+            duration,
+            breaks = c(-Inf, 41, 151, Inf),
+            labels = c(
+               "Short Film: <40 mins",
+               "Feature Film: 41-150 mins",
+               "Long Film: >150 mins"
+            )
+         )) %>%
+         filter(!is.na(voter_gender))%>%
+         ggplot(aes(y = avg_vote,
+                    x = duration_cat)) +
+         geom_violin(fill = "#29AF7F") +
+         labs(
+            x = "Duration Category",
+            y = "Average rating by Males",
+            title = "Average IMDb rating by movie duration",
+            subtitle = "Faceted by age categories"
+         ) +
+         facet_wrap(. ~ voter_age)  +
+         theme_minimal()
+```
+
