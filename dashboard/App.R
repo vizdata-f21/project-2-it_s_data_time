@@ -253,7 +253,7 @@ ui <- navbarPage(
                               inputId = "Num_films",
                               label = "Minimum number of films",
                               choices = c(1, 2, 3, 4, 5, 6, 7,
-                                          8, 9, 10)
+                                          8, 9)
                            )
                         ),
                         mainPanel(gt_output(outputId = "directors"))
@@ -382,8 +382,6 @@ server <- function(input, output, session) {
    director_rating <- reactive({
       movies_ratings %>%
          filter(country %in% input$Country) %>%
-         filter(year >= min(input$ylim) &&
-                   year <= max(input$ylim)) %>%
          select(c(director, mean_vote, country, duration)) %>%
          separate(director, c("director1", "director2"),
                   ", ") %>%
