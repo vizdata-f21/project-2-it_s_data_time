@@ -20,11 +20,12 @@ title_principles <- read_csv("../data/IMDb title_principals.csv")
 
 age_gender_data <- read_csv("../data/age_gender_data.csv")
 
+# Wrangle data ---------------------------------------------------------
+
+
 movies <- movies %>%
    mutate(century = case_when(year >= 2000 ~ "1",
                               year >= 900 & year < 2000 ~ "0"))
-
-# Wrangle data ---------------------------------------------------------
 
 movies_ratings <- movies %>%
    filter(year >= 1950) %>%
