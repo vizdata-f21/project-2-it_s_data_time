@@ -4,10 +4,9 @@ library(tidyverse)
 library(gt)
 library(scales)
 library(DT)
-
-
-
-
+library(igraph)
+library(tidytext)
+library(ggraph)
 # Load data ---------------------------------------------------------
 ratings <- read_csv("../data/IMDbratings.csv")
 
@@ -358,7 +357,8 @@ server <- function(input, output, session) {
                title = "Median IMDb rating",
                subtitle = "By Budget categories"
             ) +
-            scale_x_continuous(breaks = c(1:10))
+            scale_x_continuous(breaks = c(1:10)) +
+            scale_fill_viridis_d()
       } else{
          ggplot(data = movie_budget(),
                 aes(x = rating_cat,
