@@ -1,0 +1,36 @@
+
+title: "debug"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+```{r}
+
+test <- read_csv("../data/test.csv")
+
+
+```
+
+
+```{r}
+gender <- test %>%
+   filter(!is.na(voter_gender)) %>%
+   distinct(voter_gender) %>%
+   pull()
+```
+
+
+```{r}
+
+
+movie_duration <- test %>%
+  filter(country == "USA") %>%
+  filter(voter_gender == "M")
+
+```
+

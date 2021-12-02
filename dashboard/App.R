@@ -152,6 +152,11 @@ ui <- navbarPage(
         )
       ),
       mainPanel(
+         h3(strong(
+            em("\"I'm told we movie critics praise movies that are long"),
+            em("\ and boring.\""),
+             " - Roger Ebert"
+         )),
          tabsetPanel(
             tabPanel(
                "Ratings by Age and Gender",
@@ -424,7 +429,7 @@ server <- function(input, output, session) {
             avg_ratings = "Average Rating",
             count = "# Films"
          ) %>%
-         tab_spanner(label = "Top 10 Most Highly Rated Directors",
+         tab_spanner(label = "Top Rated Directors",
                      columns = everything()) %>%
          fmt_number(columns = where(is.numeric),
                     decimals = 2) %>%
