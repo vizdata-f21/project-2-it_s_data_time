@@ -455,7 +455,7 @@ server <- function(input, output, session) {
          geom_violin(fill = "#29AF7F") +
          labs(
             x = "Duration Category",
-            y = "Average rating by Males",
+            y = "Mean rating",
             title = "Average IMDb rating by movie duration",
             subtitle = "Faceted by age categories"
          ) +
