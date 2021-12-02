@@ -131,12 +131,16 @@ ui <- navbarPage(
    tabPanel(
       "Everyone's A Critic",
       sidebarLayout(sidebarPanel(
+        style = "background: black",
+        wellPanel(
+          style = "background: #2D708E; color: white",
          checkboxGroupInput(
             inputId = "Country",
             label = "Select countries",
             choices = country,
             selected = c("USA", "UK")
          )
+        )
       ),
       mainPanel(
          tabsetPanel(
@@ -234,7 +238,7 @@ ui <- navbarPage(
                      )
                   ),
                   mainPanel(
-                     h1(strong(
+                     h3(strong(
                         em("\"Filmmaking is a chance to live many lifetimes.\""),
                         "- Robert Altman"
                      )),
