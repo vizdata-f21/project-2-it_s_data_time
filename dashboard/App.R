@@ -34,15 +34,10 @@ movies_ratings <- movies_ratings %>%
                 names_to = "temp",
                 values_to = "country")
 
-<<<<<<< HEAD
-            #Warning appears for observations with more than 2 countries.
-            #Did not count countries listed in 3rd position and beyond.
+   #Creates warnings since different number of countries in each obs
+   #Countries listed after the second position were removed
 
-
-gender <- test %>%
-=======
 gender <- age_gender_data %>%
->>>>>>> 8dc78a90b6587d750cec5a1b9876dabaf860c449
    filter(!is.na(voter_gender)) %>%
    distinct(voter_gender) %>%
    pull()
