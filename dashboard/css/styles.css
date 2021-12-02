@@ -1,0 +1,71 @@
+
+/*Import Atkinson Hyperlegible*/
+
+@font-face {
+  src: url("Web Fonts/TTF");
+  font-family: "Hyperlegible";
+}
+
+
+* {
+  font-family: 'Hyperlegible';
+}
+
+.h1{
+  font-size: 14px;
+}
+
+/*Colour of nav bar Title*/
+.navbar-default .navbar-brand{
+  background-color: #FDE725;
+  color: black;
+  font-size:30px;
+  font-family: 'Hyperlegible';
+  font-style: 'Italic';
+}
+
+
+/*Color for each page Tab text*/
+.navbar-default .navbar-nav > li  > a{
+  color: white;
+  font-size:20px;
+  font-family: 'Hyperlegible';
+}
+
+/*Colour of nav bar tabs when hovering and active*/
+.navbar-default .navbar-nav > .active > a,
+                           .navbar-default .navbar-nav > .active > a:focus,
+                           .navbar-default .navbar-nav > .active > a:hover {
+                                background-color: #2D708E ;
+                            }
+
+/* Style setting for Selection boxes. */
+
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  /* Styling checkbox */
+  width: 16px;
+  height: 16px;
+  border: 1px solid black;
+  box-shadow: white;
+  background-color: white;
+}
+
+input[type="checkbox"]:checked {
+  border: 1px solid black;
+  box-shadow: white;
+  background-color: #29AF7F;
+}
+
+input[type="checkbox"]:checked:after {
+  display: block;
+  box-shadow: white;
+}
+
+input[type="checkbox"]:disabled:after {
+  border-color: black;
+  box-shadow: white;
+}

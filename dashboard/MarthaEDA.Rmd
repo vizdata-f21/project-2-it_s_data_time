@@ -1,0 +1,185 @@
+---
+title: "peopleeda"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(forcats)
+library(dplyr)
+library(stringr)
+library(janitor)
+library(tidytext)
+library(igraph)
+library(tidygraph)
+library(ggraph)
+```
+
+
+```{r}
+ratings <- read_csv("../data/IMDbratings.csv")
+movies <- read_csv("../data/IMDb movies.csv")
+title_principles <- read_csv("../data/IMDb title_principals.csv")
+```
+
+```{r}
+people <-movies%>%
+  mutate(century = case_when(
+    year >=2000 ~ "1",
+    year>= 900 & year <2000 ~ "0"
+  ))  
+
+
+```
+
+ 
+### Filtering for most frequent actors by Director Selected.
+
+[ ] A can be renamed to a temporary variable that makes it easier to keep track of the changing dataset. 
+
+[ ] Script for filtering based on director,actor or writer can be a function call. 
+```{r}
+A<-people%>%
+  filter(str_detect(director, "Paul Wegener"))%>%
+  select(actors)
+
+names(A)
+
+actors<-unnest_tokens(A, split, names(A), token = str_split, pattern = ",")%>%
+   group_by(split)%>%
+  count()%>%
+  arrange(desc(n))%>%
+  head(10)
+
+actors$node = replicate(10, "Spike Lee")
+
+actors<-actors%>%
+  rename(weight = n)
+
+
+actorsconnected<-actors%>%
+  select(node,split, weight)
+
+B<-people%>%
+  filter(director == "Spike Lee")%>%
+  select(writer)
+
+
+
+writorsconnected<-unnest_tokens(B, split, writer, token = str_split, pattern = ",")%>%
+   group_by(split)%>%
+  count()%>%
+  arrange(desc(n))%>%
+  head(20)
+
+```
+
+
+```{r}
+
+bigram_graph<-actorsconnected%>%
+  graph_from_data_frame(directed = TRUE)
+
+
+name<-"spike lee"
+
+
+ggraph(bigram_graph,  layout = "kk") +
+  geom_edge_link(alpha = .5, color = "grey80",
+                 aes(width = weight), show.legend = FALSE) +
+  geom_node_point(size =5, aes(color = as.factor(name)), show.legend = FALSE) +
+   geom_node_text(aes(label = name), repel=TRUE)+
+  theme_graph()+
+    scale_edge_width(range = c(1, 10))+ 
+  scale_color_viridis(discrete = TRUE)+
+  labs(title=  paste("Connection from", name, "to Actors"), caption= "Size of Edge corresponds to frequency of the connnection")
+
+
+
+connections <- function(centurysel, initialnode, name, connection) { 
+if (initialnode == "directors"){
+   people%>%
+   filter(century == centurysel)%>%
+   filter(str_detect(director,  name))%>%
+   select(connection) -> A
+   top10<-unnest_tokens(A, split, names(A), token = str_split, pattern = ",")%>%
+   group_by(split)%>%
+  count()%>%
+  arrange(desc(n))%>%
+  head(10)
+  top10$node = replicate(10, name)
+  top10<-top10%>%
+  rename(weight = n)
+  top10<-top10%>%
+  select(node,split, weight) }
+  else {
+  if (initialnode == "writer") {
+    people%>%
+   filter(century == centurysel)%>%
+   filter(str_detect(writer,  name))%>%
+   select(connection) -> A
+   top10<-unnest_tokens(A, split, names(A), token = str_split, pattern = ",")%>%
+   group_by(split)%>%
+  count()%>%
+  arrange(desc(n))%>%
+  head(10)
+  top10$node = replicate(10, name)
+  top10<-top10%>%
+  rename(weight = n)
+  top10<-top10%>%
+  select(node,split, weight) }
+  else {
+  people%>%
+   filter(century == centurysel)%>%
+   filter(str_detect(actors,  name))%>%
+   select(connection) -> A
+   top10<-unnest_tokens(A, split, names(A), token = str_split, pattern = ",")%>%
+   group_by(split)%>%
+  count()%>%
+  arrange(desc(n))%>%
+  head(10)
+  top10$node = replicate(10, name)
+  top10<-top10%>%
+  rename(weight = n)
+  top10<-top10%>%
+  select(node,split, weight)}}
+  return(top10)
+  }
+  
+  
+  
+  connections("0", "actors", "Spike Lee", "writer")
+  
+    connections("0", "directors", "Paul Wegener", "actors")
+    
+   
+  
+  
+  
+  A <- people%>%
+  filter(century == centurysel)%>%
+  filter(director ==  name)%>%
+  select(connection)
+  
+  return(A)
+  
+  
+  top10<-unnest_tokens(A, split, names(A), token = str_split, pattern = ",")%>%
+   group_by(split)%>%
+  count()%>%
+  arrange(desc(n))%>%
+  head(10)
+
+top10$node = replicate(10, name)
+
+top10<-top10%>%
+  rename(weight = n)
+
+
+top10<-top10%>%
+  select(node,split, weight) 
+  
+```
