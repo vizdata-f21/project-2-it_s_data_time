@@ -75,7 +75,7 @@ connections <- function(centurysel, initialnode, name = "Spike Lee", connection)
 
 # Shiny UI
 ui <- navbarPage(
-  inverse = TRUE, "I 💙 Movies",
+  inverse = TRUE, "Let's Make A M💚VIE",
   # Page 1.
   tabPanel(
     "Guess the Genre", includeCSS("css/styles.css"),
