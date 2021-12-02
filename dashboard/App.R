@@ -29,7 +29,7 @@ movies <- movies %>%
 
 movies_ratings <- movies %>%
    filter(year >= 1950) %>%
-   left_join(movies, ratings, by = "imdb_title_id")
+   left_join(ratings, by = "imdb_title_id")
 
 # Country Column
 movies_ratings <- movies_ratings %>%
