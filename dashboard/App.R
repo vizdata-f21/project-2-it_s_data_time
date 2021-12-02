@@ -14,33 +14,30 @@ library(shinydashboard)
 # Load data ---------------------------------------------------------
 ratings <- read_csv("../data/IMDbratings.csv")
 
-movies <- read_csv("../data/IMDb movies.csv") %>%
-   filter(year >= 1950)
-
-movies_ratings <- left_join(movies, ratings, by = "imdb_title_id")
+movies <- read_csv("../data/IMDb movies.csv")
 
 title_principles <- read_csv("../data/IMDb title_principals.csv")
+
+age_gender_data <- read_csv("../data/age_gender_data.csv")
+
 movies <- movies %>%
    mutate(century = case_when(year >= 2000 ~ "1",
                               year >= 900 & year < 2000 ~ "0"))
 
+# Wrangle data ---------------------------------------------------------
 
-age_gender_data <- read_csv("../data/age_gender_data.csv")
+movies_ratings <- movies %>%
+   filter(year >= 1950) %>%
+   left_join(movies, ratings, by = "imdb_title_id")
+
 # Country Column
-
 movies_ratings <- movies_ratings %>%
    separate(country, c("country1", "country2"), ", ") %>%
    pivot_longer(starts_with("country"),
                 names_to = "temp",
                 values_to = "country")
-
    #Creates warnings since different number of countries in each obs
    #Countries listed after the second position were removed
-
-gender <- age_gender_data %>%
-   filter(!is.na(voter_gender)) %>%
-   distinct(voter_gender) %>%
-   pull()
 
 country <- movies_ratings %>%
    filter(!is.na(country)) %>%
@@ -49,10 +46,16 @@ country <- movies_ratings %>%
    arrange(country_other) %>%
    pull()
 
+# Gender Column
+gender <- age_gender_data %>%
+   filter(!is.na(voter_gender)) %>%
+   distinct(voter_gender) %>%
+   pull()
 
 
-## Function for People Tab Data Filtering.
 
+
+## Function for Network Tab Data Filtering.
 connections <-
    function(centurysel,
             initialnode,
@@ -121,8 +124,8 @@ connections <-
    }
 
 ### Genre
-movie <- read_csv(here::here("data/IMDb movies.csv"))
-data_genre <- movie %>%
+
+data_genre <- movies %>%
    select(imdb_title_id:votes)
 
 # clean variable 'genre' into the basic film categories: https://www.premiumbeat.com/blog/guide-to-basic-film-genres/
@@ -155,7 +158,6 @@ genre_data <- subset(genre_all, (genre %in% genre_count$genre))
 
 # clean variable 'country' using the first country listed for each entry
 genre_data$country <- paste(genre_data$country,",", sep="")
-
 genre_data <- genre_data %>%
    separate(country, c("main_country", "other_country"), extra = "merge", fill = "left")
 
@@ -165,7 +167,9 @@ genre_data <- genre_data %>%
 ui <- navbarPage(
    inverse = TRUE,
    "Let's Make A M💚VIE",
-   # Page 1.
+################################################################################
+# Ratings Tab UI
+################################################################################
    tabPanel(
       "Everyone's A Critic",
       sidebarLayout(sidebarPanel(
@@ -246,6 +250,9 @@ ui <- navbarPage(
          )
       ))
    ),
+################################################################################
+# Network Tab UI
+################################################################################
    tabPanel("A Net of Stars ",
             fluidPage(
                sidebarLayout(
@@ -307,6 +314,9 @@ ui <- navbarPage(
                   )
                )
             )),
+################################################################################
+# Genre Tab UI
+################################################################################
    tabPanel(
       "Guess the Genre",
       includeCSS("css/styles.css"),
@@ -327,7 +337,11 @@ ui <- navbarPage(
 
 
 server <- function(input, output, session) {
-   ######################
+
+################################################################################
+   # Ratings Tab Data
+################################################################################
+
    # Duration Plot Data Set
    movie_duration <- reactive({
       age_gender_data %>%
@@ -402,7 +416,7 @@ server <- function(input, output, session) {
 
 
    ################################################################################
-   # Plots
+   # Ratings Tab Plots
    ################################################################################
 
    # Budget rating plot
@@ -526,6 +540,10 @@ server <- function(input, output, session) {
          )
       )
    })
+
+   ################################################################################
+   # Network Tab
+   ################################################################################
 
    # Peoples Tab Output.
 
@@ -702,7 +720,9 @@ server <- function(input, output, session) {
    )
 
 
-## GENRE TAB ------------------------------------------------------------------
+################################################################################
+# Genre Tab
+################################################################################
 
 # Load data  ---------------------------------------------------------
    # explore how the average ratings and the total number of movies made within each genre change over the years
@@ -778,20 +798,6 @@ output$map <- renderPlot({
 })
 
 }
-
-
-
-
-
-
-
-
-
-# Motivation
-# Purpose
-# Overcoming technical challenges (Not too much)
-# Audience
-
 
 # Run application.
 
