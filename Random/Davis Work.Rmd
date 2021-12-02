@@ -1,0 +1,86 @@
+---
+title: "Davis Work"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(tidyverse)
+library(dplyr)
+```
+
+```{r}
+
+ratings <- read_csv("../data/IMDbratings.csv")
+
+movies <- read_csv("../data/IMDb movies.csv") %>%
+  filter(year >= 1950)
+
+movies_ratings <- left_join(movies, ratings, by = "imdb_title_id")
+
+title_principles <- read_csv("../data/IMDb title_principals.csv")
+
+```
+
+```{r}
+
+country2 <- movies_ratings %>%
+   filter(!is.na(country)) %>%
+   mutate(
+      country_other = fct_lump_min(country,min = 300)
+   ) %>%
+   distinct(country_other) %>%
+   arrange(country_other) %>%
+   pull()
+
+```
+
+
+
+
+```{r}
+movies_ratings <- movies_ratings %>%
+  separate(country, c("country1", "country2"), ", ") %>%
+  pivot_longer(starts_with("country"), names_to = "temp", values_to =
+                 "country") %>%
+  filter(!is.na(country))
+
+country <- movies_ratings %>%
+  mutate(
+    country_other = fct_lump_min(country, min = 300)
+    ) %>%
+  distinct(country_other) %>%
+  arrange(country_other) %>%
+  pull()
+```
+
+
+
+
+
+```{r}
+
+directors_ratings <- movies_ratings %>%
+  select(c(director, mean_vote, country, duration)) %>%
+  separate(director, c("director1", "director2"),
+           ", ") %>%
+  pivot_longer(starts_with("director"), 
+               names_to = "temp", values_to = "director") %>%
+  na.omit() %>%
+  group_by(director) %>%
+  mutate(avg_ratings = mean(mean_vote),
+         count = n(),
+         avg_duration = mean(duration)) %>%
+  select(-c(temp, mean_vote)) %>%
+  filter(country == "USA") %>%
+  arrange(desc(avg_ratings)) %>%
+  distinct() %>%
+  ungroup() %>%
+  filter(count >= 3) %>%
+  slice(1:10)
+
+  
+
+```
+
