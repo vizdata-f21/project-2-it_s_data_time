@@ -358,7 +358,8 @@ server <- function(input, output, session) {
                subtitle = "By Budget categories"
             ) +
             scale_x_continuous(breaks = c(1:10)) +
-            scale_fill_viridis_d()
+            scale_fill_viridis_d() +
+            theme_minimal()
       } else{
          ggplot(data = movie_budget(),
                 aes(x = rating_cat,
@@ -371,7 +372,8 @@ server <- function(input, output, session) {
                title = "Median IMDb rating",
                subtitle = "By Budget categories"
             ) +
-            scale_fill_viridis_d()
+            scale_fill_viridis_d()  +
+            theme_minimal()
       }
 
 
@@ -392,7 +394,8 @@ server <- function(input, output, session) {
             title = "Average IMDb rating by movie duration",
             subtitle = "Faceted by age categories"
          ) +
-         facet_wrap(. ~ voter_age)
+         facet_wrap(. ~ voter_age)  +
+         theme_minimal()
    })
 
    # Directors table
@@ -427,7 +430,8 @@ server <- function(input, output, session) {
             x = "Year",
             y = "Median IMDb rating",
             size = "Number of movies"
-         )
+         )  +
+         theme_minimal()
    )
 
    # Tooltip information
