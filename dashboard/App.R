@@ -191,6 +191,8 @@ ui <- navbarPage(
             em("\ and boring.\""),
              " - Roger Ebert"
          )),
+         h3("Exploring ratings:"),
+         br(),
          tabsetPanel(
             tabPanel(
                "Ratings by Age and Gender",
@@ -209,7 +211,8 @@ ui <- navbarPage(
                   radioButtons(
                      inputId = "Budget",
                      label = "Choose bar graph type",
-                     choices = c("fill", "dodge")
+                     choices = list("Stacked" = "fill",
+                                    "Dodged" = "dodge")
                   ),
                   radioButtons(
                      inputId = "Budget_Cat",
