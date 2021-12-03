@@ -192,7 +192,6 @@ ui <- navbarPage(
         )
       ),
       mainPanel(
-<<<<<<< HEAD
         h3(strong(
           em("\"I'm told we movie critics praise movies that are long"),
           em("\ and boring.\""),
@@ -226,8 +225,8 @@ ui <- navbarPage(
             ),
             plotOutput(
               outputId = "yr_plot",
-              hover = hoverOpts(id = "plot_hover")
-=======
+              hover = hoverOpts(id = "plot_hover"),
+
          h3(strong(
             em("\"I'm told we movie critics praise movies that are long"),
             em("\ and boring.\""),
@@ -275,7 +274,6 @@ ui <- navbarPage(
                   step = 5,
                   sep = ""
                )
->>>>>>> 87f07ef80f073e38ec109ee23b7b18cdb2451066
             ),
             verbatimTextOutput("hover_info"),
             sliderInput(
@@ -313,6 +311,8 @@ ui <- navbarPage(
         )
       )
     )
+  )
+  )
   ),
   ################################################################################
   # Network Tab UI
