@@ -1,33 +1,28 @@
----
-urlcolor: red
----
 
-Dashboard
+ Let's Make A Movie: An Analysis of Movie Trends from 1894 to 2020 
 ================
-Team It’s Data Time: Raffay Rana, Krystal Hu, Davis Jones, Martha
-Aboagye
+Team It’s Data Time: Raffay Rana, Krystal Hu, Davis Jones, Martha Aboagye
 
-# Introduction:
+# Introduction
 
-The overall goal of our project is to build an interactive dashboard for users to explore movie data. To achieve this, we created a shiny app for users to explore relationships with movie genres, ratings, and casts, each of which has a dedicated tab in our dashboard. Within each section of the dashboard, users have the ability to toggle the visualization by a set of parameters to customize the data to their liking. We also made sure to make each of the visualizations as accessible to those with color deficiencies by using the viridis scale on colored visualizations. 
+The overarching goal of our project is to build an interactive dashboard for users to explore movie data. To achieve this, we  have created a shiny app for users to explore relationships with movie genres, ratings, and movie roles, each of which has a dedicated tab in our dashboard. Within each section of the dashboard, users have the ability to toggle the visualization by a set of parameters to customize the data to their liking. We  also made sure to make our site accessible by  using the viridis scale on colored visualizations and making the font for our entire dashboard the Atkinson HyperLegible Font.
 
 The data we use in our analysis comes from <a href="https://www.kaggle.com/stefanoleone992/imdb-extensive-dataset?select=IMDb+movies.csv" style = "color: black; background-color: white"> Kaggle</a>. This data is broken up into csv files, and we use three of them in our analysis, `IMDbmovies.csv`, `IMDbtitle_principals.csv`, and `IMDbtitle_principals.csv`. The `IMDbmovies.csv` dataset contains data on movies with more than 100 votes scraped from the IMDb website uptill 01/01/2020. The  dataset has `85855` observations and `22` variables.   For our secondary datasets, the `IMDbtitle_principals.csv` dataset has has `835513` observations and `6` variable and the `IMDBratings` has  `85855` observations and `49` variables. To improve the performance of our shiny app we ran a r script to wrangle data and saved the new dataset into the age_gender_data.csv file. 
 
 
+The motivation behind this project is multifaceted. First off, we  believe that movies are incredibly interesting to analyze, as there are so many different avenues to pursue. A dashboard helps facilitate exploration, as it makes it easy to separate out information and allow users to focus on the variables of their choosing. Secondly, we were very pleased with the dataset we found. It is quite extensive and mostly complete, and we felt confident that with such a great dataset, we could remain nimble in case we ran into issues as we started building our dashboard. Lastly, we wanted to create a higher-level user experience and try something new in R. None of us have used shiny or built a dashboard before, but we all wanted to take on the challenge as we knew the end result would be both quality and engaging. 
 
-The motivation behind this project is multifaceted. First off, we all believe that movies are incredibly interesting to analyze, as there are so many different avenues to pursue. A dashboard helps facilitate exploration, as it makes it easy to separate out information and allow users to focus on the variables of their choosing. Secondly, we were very pleased with the dataset we found. It is quite extensive and mostly complete, and we felt confident that with such a great dataset, we could remain nimble in case we ran into issues as we started building our dashboard. Lastly, we wanted to create a higher-level user experience and try something new in R. None of us have used shiny or built a dashboard before, but we all wanted to take on the challenge as we knew the end result would be both quality and engaging. 
 
+# Dashboard Layout
 
-# Dashboard Layout. 
-
-This dashboard contains 4 tabs: Opening credits, Everyone's A Critic, A Net of
+This dashboard contains 4 tabs: Opening credits, Everyone's A Critic, A Network of
 Stars Tab and  Guess the Genre Tab.
 
 ## Opening Credits Tab
 
-This tab contains this writeup and contextualizes the project.
+The opening credit tab contains this writeup and contextualizes the project.
 
-## Everyone's A Critic Tab:
+## Everyone's A Critic Tab
 
 In the ratings tab, we wanted to look at how different variables affect the way movies are rated. The principal relationship we examine in this section is the relationship between geography and rating. Users have the ability to select which countries they would like to include in their analysis. Once they have done this, users can span across the different tabs to further explore how movie ratings vary based on age, gender, year, and budget. We also thought it would be interesting to examine which directors’ movies had the highest average rating, so we also included a table that shows the most highly-rated directors for the geographies selected. We built in various functionalities in this tab, which are discussed below. 
 
@@ -44,13 +39,13 @@ Provide any useful takeaways / speculations from the analysis
 
 
 
-## A Net of Stars Tab
+## A Network of Stars Tab
 
-The main purpose of this tab was to explore the connection between the different roles people inhabit in the process of making movies. With this tab, we wanted to create a way to visualize the connection between actors, directors and writers.  We wanted users to be able to explore the relationships from any starting point. So for example, we want people to be able to select a director and explore their relationship to actors or writers or start from an actor and visualizer their connection to other directors and writers.   The dataset used for  this analysis was the movies dataset. Specifically, we focused on the variables `year`, `actors`, `directors` and `writers`.   We also created a categorical century variable that indicates which century the film is based in and makes it easier to search for user input. 
+The main purpose of this tab was to explore the connection between the different roles people inhabit in the process of making movies. With this tab, we wanted to create a way to visualize the connection between actors, directors and writers.  We wanted users to be able to explore the relationships from any starting point. So for example, we want people to be able to select a director and explore their relationship to actors or writers or start from an actor and visualize their connection to other directors and writers.   The dataset used for  this analysis was the movies dataset. Specifically, we focused on the variables `year`, `actors`, `directors` and `writers`.   We also created a categorical `century` variable that indicates which century the film is based in and makes it easier to search for user input. 
 
 After users select which director, actor or writer and the specific connection they want to visualize, we generate a directed network plot that shows the connection between the person they searched for and their most frequent collaborators.  We thought a network plot with the person of interest as the center vertex makes the most sense because it provides an intuitive  visual representation of the connection,  The edges between the vertices indicates the frequency of the collaboration between them. We also generate a table under  the plot that shows the underlying data used to create the plot. 
 
-##  Guess the Genre Tab:
+##  Guess the Genre Tab
 
 The main purpose of this tab was to explore how films in different genres were produced and rated differently. We wanted to create visualizations that compare how films made in each genre change from year to year (1900-2020 in this dataset), both in terms of number of production as well as average ratings across all listings within the genre in that said year. In addition, with a heat map, we’d also like to explore which countries around the world are the main production powerhouse for different genres.
 As there exist thousands of ways movies were categorized in the original dataset,  we cleaned variable ‘genre’ into the basic sixteen film <a href="https://www.premiumbeat.com/blog/guide-to-basic-film-genres" style = "color: black; background-color: white"> categories </a>. We also calculated the average rating score amongst all of the movies made in each genre by year. In addition, there are a handful of movies that have more than one country listed under their country of origin. For mapping purposes and the custom in the film-making industry of placing the main production country to the front of the list, we only used the first country listed as country of origin when creating the heat map.

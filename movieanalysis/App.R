@@ -273,7 +273,7 @@ ui <- navbarPage(
   ################################################################################
   # Network Tab UI
   ################################################################################
-  tabPanel("A Net of Stars ",
+  tabPanel("A Network of Stars ",
            fluidPage(
              sidebarLayout(
                position = "left",
