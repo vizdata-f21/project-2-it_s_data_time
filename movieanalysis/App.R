@@ -174,7 +174,6 @@ genre_data <- genre_data %>%
 ui <- navbarPage(
   inverse = TRUE,
   "Let's Make A M💚VIE",
-  ################################################################################
 
    tabPanel("Opening Credits",
             wellPanel( style = "background: black",
@@ -185,6 +184,7 @@ ui <- navbarPage(
                             )
             )
             ),
+  ################################################################################
   # Ratings Tab UI
   ################################################################################
    tabPanel(
@@ -498,9 +498,6 @@ server <- function(input, output, session) {
 
   # Duration Plot
   output$duration_rating <- renderPlot({
-    print(unique(movie_duration()$voter_gender))
-    print(unique(input$Gender))
-
     movie_duration() %>%
       ggplot(aes(y = avg_vote,
                  x = duration_cat)) +
@@ -835,5 +832,4 @@ server <- function(input, output, session) {
 }
 
 # Run application.
-
 shinyApp(ui = ui, server = server)
