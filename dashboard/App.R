@@ -192,6 +192,7 @@ ui <- navbarPage(
         )
       ),
       mainPanel(
+<<<<<<< HEAD
         h3(strong(
           em("\"I'm told we movie critics praise movies that are long"),
           em("\ and boring.\""),
@@ -226,6 +227,55 @@ ui <- navbarPage(
             plotOutput(
               outputId = "yr_plot",
               hover = hoverOpts(id = "plot_hover")
+=======
+         h3(strong(
+            em("\"I'm told we movie critics praise movies that are long"),
+            em("\ and boring.\""),
+             " - Roger Ebert"
+         )),
+         h3("Exploring ratings:"),
+         br(),
+         tabsetPanel(
+            tabPanel(
+               "Ratings by Age and Gender",
+               plotOutput(outputId = "duration_rating"),
+               radioButtons(
+                  inputId = "Gender",
+                  label = "Choose Gender",
+                  choices = gender,
+                  width = "50%"
+               )
+            ),
+            tabPanel(
+               "Ratings by Year and Budget",
+               plotOutput(outputId = "budget_rating"),
+               splitLayout(
+                  radioButtons(
+                     inputId = "Budget",
+                     label = "Choose bar graph type",
+                     choices = list("Stacked" = "fill",
+                                    "Dodged" = "dodge")
+                  ),
+                  radioButtons(
+                     inputId = "Budget_Cat",
+                     label = "Choose rating metric",
+                     choices = c("Median Rating", "Rating Category")
+                  )
+               ),
+               plotOutput(outputId = "yr_plot",
+                          hover = hoverOpts(id = "plot_hover")),
+               verbatimTextOutput("hover_info"),
+               sliderInput(
+                  inputId = "ylim",
+                  label = "Select Year Range",
+                  min = 1950,
+                  value = c(1950, 2020),
+                  max = 2020,
+                  width = "70%",
+                  step = 5,
+                  sep = ""
+               )
+>>>>>>> 87f07ef80f073e38ec109ee23b7b18cdb2451066
             ),
             verbatimTextOutput("hover_info"),
             sliderInput(
