@@ -64,4 +64,4 @@ We saw the genre ‘Western’ had a major rise-to-fame between the 1950s and 19
 
 # Conclusion
 
-
+Our intuition when starting this project was correct: there is a lot to explore with movies! Even when only focusing on three main variables--ratings, genres, and cast--we found there was still lots of information to extract. We were happy that there were many interesting findings in our work. For example, in the US and UK, the relationship between budget and rating is not what one may think: the highest rated movies usually do not have the biggest budgets and lowest rated movies usually do not have the smallest budgets. In general, too, we all enjoyed the experience of building an interactive dashboard and believe it is a skill we will certainly use in the future. 
