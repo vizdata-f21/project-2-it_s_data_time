@@ -24,6 +24,12 @@ importance in the movie and characters played. We plan to join the three
 different CSVs together in our analysis, based on common variables such
 as movie titles and move ids.
 
-## Project click.
+## Project Structure
 
-[Click here for the project!](https://abmartha.shinyapps.io/dashboard/)
+This project contains a proposal and movieanalysis folder. The proposal folder 
+contains the initial project proposal and the movieanalysis folder contains
+the script and data needed to run the shiny dashboard. 
+
+## Project Link.
+
+[Click here for the project!](https://abmartha.shinyapps.io/movieanalysis/)

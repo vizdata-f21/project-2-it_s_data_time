@@ -315,7 +315,6 @@ ui <- navbarPage(
                  h3(textOutput("timeperiod")),
                  br(),
                  plotOutput("NetworkPlot"),
-                 # visNetworkOutput("vizNetWork", width = 800, height = 600),
                  br(),
                  br(),
                  br(),
@@ -722,9 +721,11 @@ server <- function(input, output, session) {
       theme_graph() +
       scale_edge_width(range = c(1, 10)) +
       scale_color_viridis(discrete = TRUE) +
+     # ggtitle(paste("Connection from", input$name, "to", input$connections))
       labs(
         title = paste("Connection from", input$name, "to", input$connections),
-        caption = "Size of Edge corresponds to frequency of the connnection"
+        caption = "Size of Edge corresponds to frequency of the connnection",
+        alt = "This plot is network plot"
       )
   },
   height = 600,

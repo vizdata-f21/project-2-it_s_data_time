@@ -1,0 +1,11 @@
+name: movieanalysis
+title:
+username:
+account: abmartha
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 5260233
+bundleId: 5323444
+url: https://abmartha.shinyapps.io/movieanalysis/
+when: 1638538487.85869
+lastSyncTime: 1638538487.8587
