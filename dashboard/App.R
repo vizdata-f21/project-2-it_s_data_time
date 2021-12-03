@@ -24,10 +24,8 @@ age_gender_data <- read_csv("../data/age_gender_data.csv")
 
 
 movies <- movies %>%
-  mutate(century = case_when(
-    year >= 2000 ~ "1",
-    year >= 900 & year < 2000 ~ "0"
-  ))
+  mutate(century = case_when(year >= 2000 ~ "1",
+                             year >= 900 & year < 2000 ~ "0"))
 
 movies_ratings <- movies %>%
   filter(year >= 1950) %>%
@@ -37,11 +35,10 @@ movies_ratings <- movies %>%
 movies_ratings <- movies_ratings %>%
   separate(country, c("country1", "country2"), ", ") %>%
   pivot_longer(starts_with("country"),
-    names_to = "temp",
-    values_to = "country"
-  )
-# Creates warnings since different number of countries in each obs
-# Countries listed after the second position were removed
+               names_to = "temp",
+               values_to = "country")
+#Creates warnings since different number of countries in each obs
+#Countries listed after the second position were removed
 
 country <- movies_ratings %>%
   filter(!is.na(country)) %>%
@@ -89,11 +86,10 @@ connections <-
           select(connection) -> A
         top10 <-
           unnest_tokens(A,
-            split,
-            names(A),
-            token = str_split,
-            pattern = ","
-          ) %>%
+                        split,
+                        names(A),
+                        token = str_split,
+                        pattern = ",") %>%
           group_by(split) %>%
           count() %>%
           arrange(desc(n)) %>%
@@ -110,11 +106,10 @@ connections <-
           select(connection) -> A
         top10 <-
           unnest_tokens(A,
-            split,
-            names(A),
-            token = str_split,
-            pattern = ","
-          ) %>%
+                        split,
+                        names(A),
+                        token = str_split,
+                        pattern = ",") %>%
           group_by(split) %>%
           count() %>%
           arrange(desc(n)) %>%
@@ -163,7 +158,7 @@ genre_data <- subset(genre_all, (genre %in% genre_count$genre))
 
 
 # clean variable 'country' using the first country listed for each entry
-genre_data$country <- paste(genre_data$country, ",", sep = "")
+genre_data$country <- paste(genre_data$country,",", sep="")
 genre_data <- genre_data %>%
   separate(country, c("main_country", "other_country"), extra = "merge", fill = "left")
 
@@ -178,208 +173,151 @@ ui <- navbarPage(
   ################################################################################
   tabPanel(
     "Everyone's A Critic",
-    sidebarLayout(
-      sidebarPanel(
-        style = "background: black",
-        wellPanel(
-          style = "background: #2D708E; color: white",
-          checkboxGroupInput(
-            inputId = "Country",
-            label = "Select countries",
-            choices = country,
-            selected = c("USA", "UK")
-          )
-        )
-      ),
-      mainPanel(
-        h3(strong(
-          em("\"I'm told we movie critics praise movies that are long"),
-          em("\ and boring.\""),
-          " - Roger Ebert"
-        )),
-        tabsetPanel(
-          tabPanel(
-            "Ratings by Age and Gender",
-            plotOutput(outputId = "duration_rating"),
-            radioButtons(
-              inputId = "Gender",
-              label = "Choose Gender",
-              choices = gender,
-              width = "50%"
-            )
-          ),
-          tabPanel(
-            "Ratings by Year and Budget",
-            plotOutput(outputId = "budget_rating"),
-            splitLayout(
-              radioButtons(
-                inputId = "Budget",
-                label = "Choose bar graph type",
-                choices = c("fill", "dodge")
-              ),
-              radioButtons(
-                inputId = "Budget_Cat",
-                label = "Choose rating metric",
-                choices = c("Median Rating", "Rating Category")
-              )
-            ),
-            plotOutput(
-              outputId = "yr_plot",
-              hover = hoverOpts(id = "plot_hover"),
-
-         h3(strong(
-            em("\"I'm told we movie critics praise movies that are long"),
-            em("\ and boring.\""),
-             " - Roger Ebert"
-         )),
-         h3("Exploring ratings:"),
-         br(),
-         tabsetPanel(
-            tabPanel(
-               "Ratings by Age and Gender",
-               plotOutput(outputId = "duration_rating"),
-               radioButtons(
-                  inputId = "Gender",
-                  label = "Choose Gender",
-                  choices = gender,
-                  width = "50%"
-               )
-            ),
-            tabPanel(
-               "Ratings by Year and Budget",
-               plotOutput(outputId = "budget_rating"),
-               splitLayout(
-                  radioButtons(
-                     inputId = "Budget",
-                     label = "Choose bar graph type",
-                     choices = list("Stacked" = "fill",
-                                    "Dodged" = "dodge")
-                  ),
-                  radioButtons(
-                     inputId = "Budget_Cat",
-                     label = "Choose rating metric",
-                     choices = c("Median Rating", "Rating Category")
-                  )
-               ),
-               plotOutput(outputId = "yr_plot",
-                          hover = hoverOpts(id = "plot_hover")),
-               verbatimTextOutput("hover_info"),
-               sliderInput(
-                  inputId = "ylim",
-                  label = "Select Year Range",
-                  min = 1950,
-                  value = c(1950, 2020),
-                  max = 2020,
-                  width = "70%",
-                  step = 5,
-                  sep = ""
-               )
-            ),
-            verbatimTextOutput("hover_info"),
-            sliderInput(
-              inputId = "ylim",
-              label = "Select Year Range",
-              min = 1950,
-              value = c(1950, 2020),
-              max = 2020,
-              width = "70%",
-              step = 5,
-              sep = ""
-            )
-          ),
-          tabPanel(
-            "Directors & Rating",
-            sidebarLayout(
-              sidebarPanel(
-                selectInput(
-                  inputId = "Top",
-                  label = "Top __ Directors",
-                  choices = c(10, 20, 50)
-                ),
-                selectInput(
-                  inputId = "Num_films",
-                  label = "Minimum number of films",
-                  choices = c(
-                    1, 2, 3, 4, 5, 6, 7,
-                    8, 9
-                  )
-                )
-              ),
-              mainPanel(gt_output(outputId = "directors"))
-            )
-          )
+    sidebarLayout(sidebarPanel(
+      style = "background: black",
+      wellPanel(
+        style = "background: #2D708E; color: white",
+        checkboxGroupInput(
+          inputId = "Country",
+          label = "Select countries",
+          choices = country,
+          selected = c("USA", "UK")
         )
       )
-    )
-  )
-  )
+    ),
+    mainPanel(
+      h3(strong(
+        em("\"I'm told we movie critics praise movies that are long"),
+        em("\ and boring.\""),
+        " - Roger Ebert"
+      )),
+      h3("Exploring ratings:"),
+      br(),
+      tabsetPanel(
+        tabPanel(
+          "Ratings by Age and Gender",
+          plotOutput(outputId = "duration_rating"),
+          radioButtons(
+            inputId = "Gender",
+            label = "Choose Gender",
+            choices = gender,
+            width = "50%"
+          )
+        ),
+        tabPanel(
+          "Ratings by Year and Budget",
+          plotOutput(outputId = "budget_rating"),
+          splitLayout(
+            radioButtons(
+              inputId = "Budget",
+              label = "Choose bar graph type",
+              choices = list("Stacked" = "fill",
+                             "Dodged" = "dodge")
+            ),
+            radioButtons(
+              inputId = "Budget_Cat",
+              label = "Choose rating metric",
+              choices = c("Median Rating", "Rating Category")
+            )
+          ),
+          plotOutput(outputId = "yr_plot",
+                     hover = hoverOpts(id = "plot_hover")),
+          verbatimTextOutput("hover_info"),
+          sliderInput(
+            inputId = "ylim",
+            label = "Select Year Range",
+            min = 1950,
+            value = c(1950, 2020),
+            max = 2020,
+            width = "70%",
+            step = 5,
+            sep = ""
+          )
+        ),
+        tabPanel("Directors & Rating",
+                 sidebarLayout(
+                   sidebarPanel(
+                     selectInput(
+                       inputId = "Top",
+                       label = "Top __ Directors",
+                       choices = c(10, 20, 50)
+                     ),
+                     selectInput(
+                       inputId = "Num_films",
+                       label = "Minimum number of films",
+                       choices = c(1, 2, 3, 4, 5, 6, 7,
+                                   8, 9)
+                     )
+                   ),
+                   mainPanel(gt_output(outputId = "directors"))
+                 ))
+      )
+    ))
   ),
   ################################################################################
   # Network Tab UI
   ################################################################################
-  tabPanel(
-    "A Net of Stars ",
-    fluidPage(
-      sidebarLayout(
-        position = "right",
-        sidebarPanel(
-          style = "background: black",
-          wellPanel(
-            style = "background: #2D708E; color: white",
-            selectInput(
-              "century",
-              "Select A Time Period: ",
-              choices = c("The 2000s" = "1", "The 1900s" = "0"),
-              selected = "1"
-            )
-          ),
-          wellPanel(
-            style = "background: #2D708E; color: white",
-            selectInput(
-              "start",
-              "Select initial node of connection: ",
-              choices = c(
-                "Directors" = "directors",
-                "Writers" = "writer",
-                "Actors" = "actors"
-              ),
-              selected = "directors"
-            )
-          ),
-          wellPanel(
-            style = "background: #2D708E; color: white",
-            p("Select Further Connections to Initial Node to  Explore"),
-            uiOutput("furtherOptions")
-          )
-        ),
-        mainPanel(
-          h3(strong(
-            em("\"Filmmaking is a chance to live many lifetimes.\""),
-            "- Robert Altman"
-          )),
-          h3(textOutput("timeperiod")),
-          br(),
-          plotOutput("NetworkPlot"),
-          # visNetworkOutput("vizNetWork", width = 800, height = 600),
-          br(),
-          br(),
-          br(),
-          br(),
-          br(),
-          br(),
-          br(),
-          br(),
-          br(),
-          br(),
-          h3(textOutput("analyzeConnection")),
-          br(),
-          br(),
-          br(),
-          dataTableOutput("connectTable")
-        )
-      )
-    )
-  ),
+  tabPanel("A Net of Stars ",
+           fluidPage(
+             sidebarLayout(
+               position = "right",
+               sidebarPanel(
+                 style = "background: black",
+                 wellPanel(
+                   style = "background: #2D708E; color: white",
+                   selectInput(
+                     "century",
+                     "Select A Time Period: ",
+                     choices = c("The 2000s" = "1", "The 1900s" = "0"),
+                     selected = "1"
+                   )
+                 ),
+                 wellPanel(
+                   style = "background: #2D708E; color: white",
+                   selectInput(
+                     "start",
+                     "Select initial node of connection: ",
+                     choices = c(
+                       "Directors" = "directors",
+                       "Writers" = "writer",
+                       "Actors" = "actors"
+                     ),
+                     selected = "directors"
+                   )
+                 ),
+                 wellPanel(
+                   style = "background: #2D708E; color: white",
+                   p("Select Further Connections to Initial Node to  Explore"),
+                   uiOutput("furtherOptions")
+                 )
+               ),
+               mainPanel(
+                 h3(strong(
+                   em("\"Filmmaking is a chance to live many lifetimes.\""),
+                   "- Robert Altman"
+                 )),
+                 h3(textOutput("timeperiod")),
+                 br(),
+                 plotOutput("NetworkPlot"),
+                 # visNetworkOutput("vizNetWork", width = 800, height = 600),
+                 br(),
+                 br(),
+                 br(),
+                 br(),
+                 br(),
+                 br(),
+                 br(),
+                 br(),
+                 br(),
+                 br(),
+                 h3(textOutput("analyzeConnection")),
+                 br(),
+                 br(),
+                 br(),
+                 dataTableOutput("connectTable")
+               )
+             )
+           )),
   ################################################################################
   # Genre Tab UI
   ################################################################################
@@ -418,8 +356,6 @@ ui <- navbarPage(
   )
 )
 
-
-
 # SHINY SERVER
 
 
@@ -443,7 +379,7 @@ server <- function(input, output, session) {
           "Long Film: >150 mins"
         )
       )) %>%
-      filter(!is.na(voter_gender)) %>%
+      filter(!is.na(voter_gender))%>%
       filter(!is.na(voter_age))
   })
 
@@ -451,7 +387,7 @@ server <- function(input, output, session) {
   movie_yr_ratings <- reactive({
     movies_ratings %>%
       filter(country %in% input$Country) %>%
-      # filter(year >= min(input$ylim) && year <= max(input$ylim)) %>%
+      #filter(year >= min(input$ylim) && year <= max(input$ylim)) %>%
       group_by(year) %>%
       summarise(med = median(avg_vote), count = n())
   })
@@ -483,21 +419,16 @@ server <- function(input, output, session) {
     movies_ratings %>%
       filter(country %in% input$Country) %>%
       select(c(director, mean_vote, country, duration)) %>%
-      separate(
-        director, c("director1", "director2"),
-        ", "
-      ) %>%
+      separate(director, c("director1", "director2"),
+               ", ") %>%
       pivot_longer(starts_with("director"),
-        names_to = "temp",
-        values_to = "director"
-      ) %>%
+                   names_to = "temp",
+                   values_to = "director") %>%
       na.omit() %>%
       group_by(director) %>%
-      mutate(
-        avg_ratings = mean(mean_vote),
-        count = n()
-      ) %>%
-      # avg_duration = mean (duration)) %>%
+      mutate(avg_ratings = mean(mean_vote),
+             count = n()) %>%
+      #avg_duration = mean (duration)) %>%
       select(-c(temp, mean_vote, duration)) %>%
       arrange(desc(avg_ratings), director) %>%
       distinct() %>%
@@ -513,16 +444,13 @@ server <- function(input, output, session) {
 
   # Budget rating plot
   output$budget_rating <- renderPlot({
-    y_label <- ifelse(input$Budget == "fill", "Prop", "Count")
+
+    y_label = ifelse(input$Budget == "fill","Prop","Count")
 
     if (input$Budget_Cat == "Median Rating") {
-      ggplot(
-        data = movie_budget(),
-        aes(
-          x = median_vote_r,
-          fill = budget_cat
-        )
-      ) +
+      ggplot(data = movie_budget(),
+             aes(x = median_vote_r,
+                 fill = budget_cat)) +
         geom_bar(position = input$Budget) +
         labs(
           fill = "Budget category",
@@ -534,14 +462,10 @@ server <- function(input, output, session) {
         scale_x_continuous(breaks = c(1:10)) +
         scale_fill_viridis_d() +
         theme_minimal()
-    } else {
-      ggplot(
-        data = movie_budget(),
-        aes(
-          x = rating_cat,
-          fill = budget_cat
-        )
-      ) +
+    } else{
+      ggplot(data = movie_budget(),
+             aes(x = rating_cat,
+                 fill = budget_cat)) +
         geom_bar(position = input$Budget) +
         labs(
           fill = "Budget category",
@@ -550,9 +474,11 @@ server <- function(input, output, session) {
           title = "Median IMDb rating",
           subtitle = "By Budget categories"
         ) +
-        scale_fill_viridis_d() +
+        scale_fill_viridis_d()  +
         theme_minimal()
     }
+
+
   })
 
   # Duration Plot
@@ -561,10 +487,8 @@ server <- function(input, output, session) {
     print(unique(input$Gender))
 
     movie_duration() %>%
-      ggplot(aes(
-        y = avg_vote,
-        x = duration_cat
-      )) +
+      ggplot(aes(y = avg_vote,
+                 x = duration_cat)) +
       geom_violin(fill = "#29AF7F") +
       labs(
         x = "Duration Category",
@@ -572,7 +496,7 @@ server <- function(input, output, session) {
         title = "Average IMDb rating by movie duration",
         subtitle = "Faceted by age categories"
       ) +
-      facet_wrap(. ~ voter_age) +
+      facet_wrap(. ~ voter_age)  +
       theme_minimal()
   })
 
@@ -586,14 +510,10 @@ server <- function(input, output, session) {
         avg_ratings = "Average Rating",
         count = "# Films"
       ) %>%
-      tab_spanner(
-        label = "Top Rated Directors",
-        columns = everything()
-      ) %>%
-      fmt_number(
-        columns = where(is.numeric),
-        decimals = 2
-      ) %>%
+      tab_spanner(label = "Top Rated Directors",
+                  columns = everything()) %>%
+      fmt_number(columns = where(is.numeric),
+                 decimals = 2) %>%
       cols_align(align = "right", columns = where(is.numeric)) %>%
       cols_align(align = "left", columns = where(is.character))
   })
@@ -601,13 +521,9 @@ server <- function(input, output, session) {
 
   # Year Plot
   output$yr_plot <- renderPlot(
-    ggplot(
-      data = movie_yr_ratings(),
-      aes(
-        y = med,
-        x = year
-      )
-    ) +
+    ggplot(data = movie_yr_ratings(),
+           aes(y = med,
+               x = year)) +
       geom_point(aes(size = count)) +
       geom_line() +
       scale_x_continuous(limits = input$ylim) +
@@ -616,21 +532,22 @@ server <- function(input, output, session) {
         x = "Year",
         y = "Median IMDb rating",
         size = "Number of movies"
-      ) +
+      )  +
       theme_minimal()
   )
 
   # Tooltip information
   output$hover_info <- renderPrint({
     if (!is.null(input$plot_hover)) {
-      hover <- input$plot_hover
-      dist <- sqrt((hover$x - movie_yr_ratings()$year)^2 + (hover$y -
-        movie_yr_ratings()$med)^2)
+      hover = input$plot_hover
+      dist = sqrt((hover$x - movie_yr_ratings()$year) ^ 2 + (hover$y -
+                                                               movie_yr_ratings()$med) ^ 2)
       cat("Total movies in ")
       cat(movie_yr_ratings()$year[which.min(dist)])
       cat(": ")
       cat(movie_yr_ratings()$count[which.min(dist)])
     }
+
   })
 
 
@@ -763,43 +680,37 @@ server <- function(input, output, session) {
 
   spatialGraph <- eventReactive(input$do, {
     df <-
-      connections(
-        input$century,
-        input$start,
-        input$name,
-        input$connections
-      )
+      connections(input$century,
+                  input$start,
+                  input$name,
+                  input$connections)
   })
 
 
-  output$NetworkPlot <- renderPlot(
-    {
-      bigram_graph <- spatialGraph() %>%
-        graph_from_data_frame(directed = TRUE)
+  output$NetworkPlot <- renderPlot({
+    bigram_graph <- spatialGraph() %>%
+      graph_from_data_frame(directed = TRUE)
 
-      ggraph(bigram_graph, layout = "kk") +
-        geom_edge_link(
-          color = "grey80",
-          aes(width = weight * 5),
-          show.legend = FALSE
-        ) +
-        geom_node_point(
-          size = c(0.5, V(bigram_graph)$weight) * 20,
-          aes(color = as.factor(name)),
-          show.legend = FALSE
-        ) +
-        geom_node_text(aes(label = name), repel = TRUE) +
-        theme_graph() +
-        scale_edge_width(range = c(1, 10)) +
-        scale_color_viridis(discrete = TRUE) +
-        labs(
-          title = paste("Connection from", input$name, "to", input$connections),
-          caption = "Size of Edge corresponds to frequency of the connnection"
-        )
-    },
-    height = 600,
-    width = 800
-  )
+    ggraph(bigram_graph, layout = "kk") +
+      geom_edge_link(
+        color = "grey80",
+        aes(width = weight*5),
+        show.legend = FALSE
+      ) +
+      geom_node_point(size = c(0.5, V(bigram_graph)$weight) * 20,
+                      aes(color = as.factor(name)),
+                      show.legend = FALSE) +
+      geom_node_text(aes(label = name), repel = TRUE) +
+      theme_graph() +
+      scale_edge_width(range = c(1, 10)) +
+      scale_color_viridis(discrete = TRUE) +
+      labs(
+        title = paste("Connection from", input$name, "to", input$connections),
+        caption = "Size of Edge corresponds to frequency of the connnection"
+      )
+  },
+  height = 600,
+  width = 800)
 
   # output$vizNetWork <- renderVisNetwork (
   #   {
@@ -841,22 +752,20 @@ server <- function(input, output, session) {
   data <- reactive({
     req(input$genre)
     df <-
-      genre_data %>%
-      filter(genre %in% input$genre) %>%
-      group_by(year) %>%
-      summarise(avg_rating = mean(avg_vote), count = n())
+      genre_data %>% filter(genre %in% input$genre) %>% group_by(year) %>% summarise(avg_rating = mean(avg_vote), count = n())
   })
 
   output$bar_plot <- renderPlot({
     ggplot(data(), aes(y = count, x = year, fill = avg_rating)) +
-      geom_bar(
-        stat = "identity",
-        width = 1,
-        size = 1
-      ) +
+      geom_bar(stat = "identity",
+               width = 1,
+               size = 1) +
       scale_fill_continuous(
         name = "Rating average",
-        breaks = seq(from = 0, to = 10, by = 1)
+        trans = "log10",
+        breaks = seq(from = 0, to = 10, by = 1),
+        high = "red4",
+        low = "darkgoldenrod1"
       ) +
       scale_y_continuous(name = "Count") +
       scale_x_continuous(
@@ -866,7 +775,7 @@ server <- function(input, output, session) {
       ) +
       scale_fill_viridis() +
       theme(
-        plot.title = element_text(family ="Atkinson Hyperlegible",size = 18),
+        plot.title = element_text(size = 17),
         legend.position = "bottom",
         panel.grid = element_blank(),
         axis.ticks = element_blank(),
@@ -874,10 +783,9 @@ server <- function(input, output, session) {
         axis.text = element_text(size = 9, face = "bold"),
         axis.title = element_text(size = 13, face = "bold")
       ) +
-      labs(
-        title = "Production and ratings of major movie genres from 1900 to 2020",
-        caption = "Source: IMDb movies extensive dataset; Kaggle"
-      )
+      labs(title = "Production and ratings of major movie genres from 1900 to 2020",
+           caption = "Source: IMDb movies extensive dataset; Kaggle")
+
   })
 
   # explore how the number of movies made varies across countries within each genre
@@ -885,23 +793,21 @@ server <- function(input, output, session) {
   mapdata <- reactive({
     req(input$genre)
     df <-
-      genre_data %>%
-      filter(genre %in% input$genre) %>%
-      group_by(main_country) %>%
-      summarise(count = n())
+      genre_data %>% filter(genre %in% input$genre) %>% group_by(main_country) %>% summarise(count = n())
     df <- inner_join(df, world, by = c("main_country" = "region"))
     return(df)
   })
   output$map <- renderPlot({
-    ggplot(
-      data = mapdata(),
-      mapping = aes(x = long, y = lat, group = group)
-    ) +
+    ggplot(data = mapdata(),
+           mapping = aes(x = long, y = lat, group = group)) +
       coord_fixed(1.3) +
       geom_polygon(aes(fill = count)) +
+      scale_fill_continuous(trans = "log10",
+                            high = "red4",
+                            low = "darkgoldenrod1") +
       scale_fill_viridis() +
       theme(
-        plot.title = element_text(family ="Atkinson Hyperlegible", hjust = 0.1, size = 18),
+        plot.title = element_text(hjust = 0.1, size = 17),
         plot.caption = element_text(hjust = 1),
         axis.text = element_blank(),
         axis.line = element_blank(),
@@ -911,11 +817,10 @@ server <- function(input, output, session) {
         axis.title = element_blank(),
         panel.background = element_rect(fill = "white")
       ) +
-      labs(
-        title = "Production of major movie genres around the world",
-        caption = "Source: IMDb movies extensive dataset; Kaggle"
-      )
+      labs(title = "Production of major movie genres around the world",
+           caption = "Source: IMDb movies extensive dataset; Kaggle")
   })
+
 }
 
 # Run application.
