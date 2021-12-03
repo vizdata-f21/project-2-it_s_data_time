@@ -61,10 +61,13 @@ connections <-
   function(centurysel,
            initialnode,
            name = "Spike Lee",
-           connection) {
+           connection,
+           year1,
+           year2) {
     if (initialnode == "directors") {
       movies %>%
         filter(century == centurysel) %>%
+        filter(year>= year1 & year<= year2)%>%
         filter(str_detect(director, name)) %>%
         select(connection) -> A
       top10 <-
@@ -572,9 +575,9 @@ server <- function(input, output, session) {
 
   output$timeperiod <- renderText({
     if (input$century == "1") {
-      paste("Analysing trends in the 21st Century: ")
+      paste("Analysing connections in the 21st Century: ")
     } else {
-      paste("Analysing trends in the 20th Century: ")
+      paste("Analysing connections in the 20th Century: ")
     }
   })
 
@@ -683,7 +686,9 @@ server <- function(input, output, session) {
       connections(input$century,
                   input$start,
                   input$name,
-                  input$connections)
+                  input$connections,
+                  input$year[1],
+                  input$year[2])
   })
 
 
@@ -712,30 +717,22 @@ server <- function(input, output, session) {
   height = 600,
   width = 800)
 
-  # output$vizNetWork <- renderVisNetwork (
-  #   {
-  #      bigram_graph <- spatialGraph() %>%
-  #         graph_from_data_frame(directed = TRUE)
-  #    V(bigram_graph)$color <- (viridis_pal()(11))
-  #    V(bigram_graph)$size  <- spatialGraph()$weight * 5
-  #     visIgraph(bigram_graph, type= "full") %>%
-  #        visInteraction(hover = TRUE, tooltipDelay = 0)
-
-  #     })
 
   output$analyzeConnection <- renderText(
     paste0(
-      "Wow, it looks like  ",
+      "Some of ",
       input$name,
       "'s",
-      " favorite ",
-      input$connections,
-      " is ",
-      spatialGraph()[1, 2]
-    )
+      " most frequent collaborators are  ",
+      spatialGraph()[1, 2],
+      ",",
+      spatialGraph()[2, 2],
+      " and ",
+      spatialGraph()[3, 2])
   )
 
   output$connectTable <- DT::renderDataTable(
+
     spatialGraph() %>%
       rename(Name = split) %>%
       rename("Number of Appearances" = weight) %>%

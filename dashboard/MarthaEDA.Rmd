@@ -111,10 +111,11 @@ ggraph(bigram_graph,  layout = "kk") +
 
 
 
-connections <- function(centurysel, initialnode, name, connection) { 
+connections <- function(centurysel, initialnode, name, connection, year1, year2) { 
 if (initialnode == "directors"){
    people%>%
    filter(century == centurysel)%>%
+   filter(year >= year1 & year <= year2)%>%
    filter(str_detect(director,  name))%>%
    select(connection) -> A
    top10<-unnest_tokens(A, split, names(A), token = str_split, pattern = ",")%>%
@@ -165,7 +166,7 @@ if (initialnode == "directors"){
   
   connections("0", "actors", "Spike Lee", "writer")
   
-    connections("0", "directors", "Paul Wegener", "actors")
+    connections("0", "directors", "Paul Wegener", "actors", 1900, 1999)
     
    
   
