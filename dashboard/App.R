@@ -10,15 +10,16 @@ library(ggraph)
 library(visNetwork)
 library(maps)
 library(shinydashboard)
+library(markdown)
 
 # Load data ---------------------------------------------------------
-ratings <- read_csv("../data/IMDbratings.csv")
+ratings <- read_csv("data/IMDbratings.csv")
 
-movies <- read_csv("../data/IMDb movies.csv")
+movies <- read_csv("data/IMDb movies.csv")
 
-title_principles <- read_csv("../data/IMDb title_principals.csv")
+title_principles <- read_csv("data/IMDb title_principals.csv")
 
-age_gender_data <- read_csv("../data/age_gender_data.csv")
+age_gender_data <- read_csv("data/age_gender_data.csv")
 
 # Wrangle data ---------------------------------------------------------
 
@@ -85,6 +86,7 @@ connections <-
       if (initialnode == "writer") {
         movies %>%
           filter(century == centurysel) %>%
+          filter(year>= year1 & year<= year2)%>%
           filter(str_detect(writer, name)) %>%
           select(connection) -> A
         top10 <-
@@ -105,6 +107,7 @@ connections <-
       } else {
         movies %>%
           filter(century == centurysel) %>%
+          filter(year>= year1 & year<= year2)%>%
           filter(str_detect(actors, name)) %>%
           select(connection) -> A
         top10 <-
@@ -172,9 +175,19 @@ ui <- navbarPage(
   inverse = TRUE,
   "Let's Make A M💚VIE",
   ################################################################################
+
+   tabPanel("Opening Credits",
+            wellPanel( style = "background: black",
+                            wellPanel(style = "background: #2D708E; color: white",
+                                       # h2("Let's Make A M💚vie: Visualizations of Movie Trends from 1894 to 2020"),
+                                       #br(),
+                                       includeMarkdown("README.md")
+                            )
+            )
+            ),
   # Ratings Tab UI
   ################################################################################
-  tabPanel(
+   tabPanel(
     "Everyone's A Critic",
     sidebarLayout(sidebarPanel(
       style = "background: black",
@@ -263,7 +276,7 @@ ui <- navbarPage(
   tabPanel("A Net of Stars ",
            fluidPage(
              sidebarLayout(
-               position = "right",
+               position = "left",
                sidebarPanel(
                  style = "background: black",
                  wellPanel(

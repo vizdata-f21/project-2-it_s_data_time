@@ -24,6 +24,15 @@
   background-color: #2D708E ;
 }
 
+#subtitle{
+   color: white;
+  font-size: 20px;
+  font-family: 'Hyperlegible';
+   border: 1px solid black;
+  box-shadow: black;
+  background-color: #FDE725;
+
+}
 /*Colour of nav bar Title*/
 .navbar-default .navbar-brand{
   background-color: #FDE725;
