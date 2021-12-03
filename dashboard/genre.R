@@ -129,6 +129,7 @@ server <- function (input, output) {
       ) +
       labs(
         title = "Production of major movie genres around the world",
+        subtitle = "from 1900 to 2020",
         caption = "Source: IMDb movies extensive dataset; Kaggle")
   })
 }
