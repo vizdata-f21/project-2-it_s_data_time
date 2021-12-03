@@ -24,14 +24,6 @@ importance in the movie and characters played. We plan to join the three
 different CSVs together in our analysis, based on common variables such
 as movie titles and move ids.
 
-## Questions
+## Project click.
 
-We do not have a particular question or questions we would like to
-answer yet. Due to the size of our data, we will have to work with it
-and test its functionality in the dashboard to generate questions that
-are feasible to answer with this tool. However, upon our initial review
-of the data, we are confident that we would like to further explore
-movie ratings, cast members, and genres. Based on the design of our
-dashboard and initial exploration of the data, we will further refine
-these areas of interest to come up with specific objectives for our
-dashboard.
+[Click here for the project!](https://abmartha.shinyapps.io/dashboard/)
