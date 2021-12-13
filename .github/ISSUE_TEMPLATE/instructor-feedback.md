@@ -29,7 +29,7 @@ This is your proposal score. For more on the details, see __.
 
 ## Presentation (instructor)
 
-Please feel free to reach out during office hours if you have any questions about the instructor portion of your presentation score.
+Please feel free to reach out if you have any questions about the instructor portion of your presentation score.
 
 ## Presentation (peers)
 
@@ -39,33 +39,21 @@ __
 
 ## Write-up
 
-- Introduction: The introduction provides a clear explanation of the question and the dataset used to answer the question, including a description of all relevant variables in the dataset. `[_ / 2 points]`
+- Introduction: The introduction provides a clear explanation of the question and the dataset used to answer the question, including a description of all relevant variables in the dataset. `[_ / 3 points]`
 
-### Question 1
+- Justification of approach: The chosen approach and visualizations are clearly explained and justified. `[_ / 3 points]`
 
-- Justification of approach: The chosen analysis approach and visualizations are clearly explained and justified. `[_ / 3 points]`
+- Code: Code is correct, easy to read, properly formatted, and properly documented. `[_ / 10 points]`
 
-- Code: Code is correct, easy to read, properly formatted, and properly documented. `[_ / 3 points]`
+- Visualization: The visualizations are appropriate, easy to read, and properly labeled. `[_ / 10 points]`
 
-- Visualization: The visualizations are appropriate, easy to read, and properly labeled. `[_ / 4 points]`
-
-- Discussion: The discussion of results is clear and correct, and it has some depth without being excessively long. `[_ / 4 points]`
-
-### Question 2
-
-- Justification of approach: The chosen analysis approach and visualizations are clearly explained and justified. `[_ / 3 points]`
-
-- Code: Code is correct, easy to read, properly formatted, and properly documented. `[_ / 3 points]`
-
-- Visualization: The visualizations are appropriate, easy to read, and properly labeled. `[_ / 4 points]`
-
-- Discussion: The discussion of results is clear and correct, and it has some depth without being excessively long. `[_ / 4 points]`
+- Discussion: Discussion of results is clear and correct, and it has some depth without begin excessively long. `[_ / 4 points]`
 
 ## Reproducibility, style, and organization
 
 - All required files are provided. R Markdown files knit without issues and reproduce the necessary outputs. `[_ / 3 points]`
 
-- Data is in the data folder, with a codebook in the README, and is loaded from this folder in presentation and writeup. `[_ / 3 points]`
+- If there’s a dataset, it’s provided in a data folder, a codebook is provided, and a local copy of the data file is used where needed. `[_ / 3 points]`
 
 - Documents are well structured and easy to follow. No extraneous materials. `[_ / 2 points]`
 
